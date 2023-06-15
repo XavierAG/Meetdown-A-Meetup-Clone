@@ -25,8 +25,8 @@ module.exports = {
       about: "Join our online book club and dive into captivating discussions about the latest novels.",
       type: "Online",
       private: true,
-      city: "",
-      state: ""
+      city: "Dallas",
+      state: "TX"
     },
     {
       organizerId: 2,
@@ -52,8 +52,8 @@ module.exports = {
       about: "Join our tech talk event and stay up to date with the latest trends in the tech industry.",
       type: "Online",
       private: false,
-      city: "",
-      state: ""
+      city: "Houston",
+      state: "TX"
     }
   ], {});
   },

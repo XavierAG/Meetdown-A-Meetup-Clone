@@ -11,27 +11,27 @@ module.exports = {
     options.tableName = 'EventImages'
     await queryInterface.bulkInsert(options, [
         {
-          EventId: 1,
+          eventId: 1,
           url: 'https://example.com/image11.jpg',
           preview: true
         },
         {
-          EventId: 2,
+          eventId: 2,
           url: 'https://example.com/image12.jpg',
           preview: false
         },
         {
-          EventId: 3,
+          eventId: 3,
           url: 'https://example.com/image13.jpg',
           preview: false
         },
         {
-          EventId: 2,
+          eventId: 2,
           url: 'https://example.com/image14.jpg',
           preview: true
         },
         {
-          EventId: 1,
+          eventId: 1,
           url: 'https://example.com/image10.jpg',
           preview: true
         }

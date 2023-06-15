@@ -19,20 +19,20 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Venue',
+          model: 'Venues',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
+        // onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Group',
+          model: 'Groups',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
+        // onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       name: {

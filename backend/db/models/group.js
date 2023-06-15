@@ -11,9 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Group.belongsTo(models.User, { foreignKey: 'organizerId' });
+      Group.hasMany(models.Venue, { foreignKey: 'groupId' , onDelete: 'CASCADE'})
+      Group.hasMany(models.Membership, { foreignKey: 'groupId', onDelete: 'CASCADE'})
+      Group.hasMany(models.GroupImage, { foreignKey: 'groupId', onDelete: 'CASCADE'})
+      Group.hasMany(models.Event, { foreignKey: 'groupId' , onDelete: 'CASCADE'})
     }
   }
   Group.init({
+    organizerId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -47,7 +55,8 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
     },
     state: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: false
     },
 
   }, {

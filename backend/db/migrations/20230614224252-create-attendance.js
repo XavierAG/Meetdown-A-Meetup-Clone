@@ -2,7 +2,7 @@
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
+  options.schema = process.env.SCHEMA;
 }
 
 /** @type {import('sequelize-cli').Migration} */
@@ -19,20 +19,20 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Event',
+          model: 'Events',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
+        // onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       userId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'User',
+          model: 'Users',
           key: 'id'
         },
-        onUpdate: 'CASCADE',
+        // onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
       status: {
@@ -52,7 +52,7 @@ module.exports = {
     }, options);
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = "Attendanves";
+    options.tableName = "Attendances";
     await queryInterface.dropTable('Attendances');
   }
 };
