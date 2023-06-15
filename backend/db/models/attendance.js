@@ -1,0 +1,32 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
+const Event = require('./event')
+const User = require('./user')
+module.exports = (sequelize, DataTypes) => {
+  class Attendance extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      Attendance.belongsTo(models.Event, { foreignKey: 'eventId'})
+      Attendance.belongsTo(models.User, { foreignKey: 'userId'})
+    }
+  }
+  Attendance.init({
+    status: {
+      type: DataTypes.ENUM('attending', 'waitlist', 'pending'),
+      allowNull: false,
+      validate: {
+        isIn: [['attending', 'waitlist', 'pending']]
+      }
+    }
+  }, {
+    sequelize,
+    modelName: 'Attendance',
+  });
+  return Attendance;
+};
