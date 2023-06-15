@@ -2,7 +2,7 @@ const express = require('express')
 const { setTokenCookie, requireAuth } = require('../../utils/auth')
 
 const { setTokenCookie, requireAuth} = require('../../atils.auth')
-const { Group } = require('../../db/models');
+const { Group, User , Membership} = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
@@ -34,6 +34,32 @@ const validateSignup = [
     handleValidationErrors
 ]
 
+router.get( '/' , async (req, res) => {
+    try {
+        const groups = await Group.findAll();
+        res.json(groups)
+    } catch(error) {
+        console.error('Error retrieving groups:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
+router.get( '/current' , requireAuth, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const groups = await Group.findAll({
+            include: [{
+                model: Membership,
+                where: { userId }
+            }]
+        });
+        res.json({Groups: groups})
+    } catch(error) {
+        console.error('Error retrieving groups:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
+
+
 router.post( '/', validateSignup,
     async (req, res) => {
         const { name, about, type, private, city, state } = req.body;
@@ -41,3 +67,5 @@ router.post( '/', validateSignup,
     }
 
 )
+
+module.exports = router;

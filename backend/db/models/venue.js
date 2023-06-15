@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Venue.belongsToMany(models.Group, { foreignKey: 'groupId'})
+      Venue.belongsToMany(models.Group, {though: 'VenueGroup', foreignKey: 'groupId'})
     }
   }
   Venue.init({
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     sequelize,
-    modelName: 'Venues',
+    modelName: 'Venue',
   });
   return Venue;
 };
