@@ -18,7 +18,7 @@ module.exports = {
       groupId: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        refrences: {
+        references: {
           model: 'Group',
           key: 'id'
         },
