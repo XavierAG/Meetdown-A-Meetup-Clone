@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const Group = require('./group');
 module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     /**
@@ -10,15 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Venue.belongsToMany(models.Group, { foreignKey: 'groupId'})
     }
   }
   Venue.init({
-    address: DataTypes.STRING,
-    city: DataTypes.STRING,
-    state: DataTypes.STRING,
-    lat: DataTypes.DECIMAL,
-    lng: DataTypes.DECIMAL
+    address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lat: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    },
+    lng: {
+      type: DataTypes.DECIMAL,
+      allowNull: false,
+    }
   }, {
     sequelize,
     modelName: 'Venues',

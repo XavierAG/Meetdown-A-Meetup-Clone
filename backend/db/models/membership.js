@@ -2,6 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const User = require('./user');
+const Group = require('./group');
 module.exports = (sequelize, DataTypes) => {
   class Membership extends Model {
     /**
@@ -10,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Membership.belongsTo(models.User, { foreignKey: userId})
-      Membership.belongsTo(models.User, { foreignKey: userId})
+      Membership.belongsTo(models.User, { foreignKey: 'userId'})
+      Membership.belongsTo(models.Group, { foreignKey: 'groupId'})
     }
   }
   Membership.init({

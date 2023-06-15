@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const Event = require('./event')
 module.exports = (sequelize, DataTypes) => {
   class EventImage extends Model {
     /**
@@ -10,12 +11,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      EventImage.belongsTo(models.Event, { foreignKey: 'eventId'})
     }
   }
   EventImage.init({
-    url: DataTypes.STRING,
-    preview: DataTypes.BOOLEAN
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    preview: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        isBoolean: true
+      }
+    },
   }, {
     sequelize,
     modelName: 'EventImage',

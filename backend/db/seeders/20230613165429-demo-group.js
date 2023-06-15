@@ -36,6 +36,24 @@ module.exports = {
       private: false,
       city: "Denver",
       state: "CO"
+    },
+    {
+      organizerId: 1,
+      name: "Art Workshop",
+      about: "Unleash your creativity in our interactive art workshop. All art enthusiasts are welcome!",
+      type: "In person",
+      private: false,
+      city: "New York",
+      state: "NY"
+    },
+    {
+      organizerId: 2,
+      name: "Tech Talk",
+      about: "Join our tech talk event and stay up to date with the latest trends in the tech industry.",
+      type: "Online",
+      private: false,
+      city: "",
+      state: ""
     }
   ], {});
   },
@@ -44,7 +62,7 @@ module.exports = {
     options.tableName = 'Groups';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      name: { [Op.in]: ['Morning Yoga in the Park', 'Virtual Book Club', 'Hiking Adventures'] }
+      name: { [Op.in]: ['Morning Yoga in the Park', 'Virtual Book Club', 'Hiking Adventures', 'Tech Talk', 'Art Workshop'] }
     }, {});
   }
 };
