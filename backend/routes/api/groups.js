@@ -37,8 +37,8 @@ router.get( '/' , async (req, res, next) => {
     try {
     const groups = await Group.findAll({
         attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
-        [sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId = "Group".id)'), 'numMembers'],
-        [sequelize.literal('(SELECT url FROM GroupImages WHERE GroupImages.groupId = "Group".id)'), 'previewImage']],
+        [sequelize.literal('(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group".id)'), 'numMembers'],
+        [sequelize.literal('(SELECT url FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group".id)'), 'previewImage']],
         raw: true,
     })
     res.json({Groups: groups})
@@ -58,8 +58,8 @@ router.get( '/current' , requireAuth, async (req, res) => {
             }],
             attributes: [
                 'id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
-                [sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId = "Group".id)'), 'numMembers'],
-                [sequelize.literal('(SELECT url FROM GroupImages WHERE GroupImages.groupId = "Group".id)'), 'previewImage']
+                [sequelize.literal('(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group".id)'), 'numMembers'],
+                [sequelize.literal('(SELECT url FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group".id)'), 'previewImage']
             ]
         });
         res.json({Groups: groups})
@@ -74,7 +74,7 @@ router.get( '/:groupId' , async (req, res, next) => {
         const groupId = req.params.groupId;
         const group = await Group.findByPk(groupId, {
         attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
-        [sequelize.literal('(SELECT COUNT(*) FROM Memberships WHERE Memberships.groupId = "Group".id)'), 'numMembers']],
+        [sequelize.literal('(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group".id)'), 'numMembers']],
         include: [
             {
                 model: GroupImage,
