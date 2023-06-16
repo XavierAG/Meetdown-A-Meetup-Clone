@@ -16,15 +16,16 @@ app.use(cookieParser());
 app.use(express.json());
 const routes = require('./routes');
 
+
 if (!isProduction) {
-    app.use(cors());
-  }
+  app.use(cors());
+}
 
 
-  app.use(
-    helmet.crossOriginResourcePolicy({
-      policy: "cross-origin"
-    })
+app.use(
+  helmet.crossOriginResourcePolicy({
+    policy: "cross-origin"
+  })
   );
 
   app.use(
@@ -35,7 +36,8 @@ if (!isProduction) {
         httpOnly: true
       }
     })
-  );
+    );
+
   app.use(routes); // Connect all the routes
 
   app.use((_req, _res, next) => {

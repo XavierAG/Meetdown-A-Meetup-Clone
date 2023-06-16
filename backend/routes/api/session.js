@@ -18,7 +18,6 @@ const validateLogin = [
       .withMessage('Please provide a password.'),
     handleValidationErrors
   ];
-
 router.get( '/', (req, res) => {
       const { user } = req;
       if (user) {
