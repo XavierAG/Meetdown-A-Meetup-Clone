@@ -21,7 +21,6 @@ const validateSignup = [
     .isIn([ 'Online', 'In person'])
     .withMessage("Type must be 'Online' or 'In person'"),
     check('private')
-    .exists({ checkFalsy: true })
     .isBoolean()
     .withMessage("Private must be boolean"),
     check('city')
