@@ -37,9 +37,11 @@ router.get( '/' , async (req, res, next) => {
     try {
     const groups = await Group.findAll({
         attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
-        [sequelize.literal('(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group".id)'), 'numMembers'],
-        [sequelize.literal('(SELECT url FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group".id)'), 'previewImage']],
-    })
+        [sequelize.fn(
+            'COUNT',
+            sequelize.col('Memberships.groupId')), 'numMembers']],
+
+    });
     res.json({Groups: groups})
     } catch (error) {
         next(error);
