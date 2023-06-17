@@ -1,5 +1,5 @@
 const express = require('express')
-const { Op } = require('sequelize');
+const { Op, Association } = require('sequelize');
 const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth')
 const { Group, User , Membership, GroupImage, Venue, sequelize} = require('../../db/models');
 const { check } = require('express-validator');
@@ -34,28 +34,49 @@ const validateSignup = [
 ]
 
 router.get( '/' , async (req, res, next) => {
-    try {
-    const groups = await Group.findAll({
-        attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt'],
-        // [sequelize.fn(
-        //     'COUNT',
-        //     sequelize.col('Memberships.groupId')), 'numMembers']],
-        include: [/*{
-            model: Membership,
-            attributes: []
-        }*/
-        {
-            model: GroupImage,
-            where: {
-                preview: true
-            },
-            attributes: ["url"],
-            required: false
-        }
-    ]
 
-    });
-    res.json({Groups: groups})
+
+    try {
+        const groups = await Group.findAll({
+            attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt'],
+                include: [
+                {
+                    model: GroupImage,
+                    where: {
+                        preview: true
+                    },
+                    attributes: ["url"],
+                    required: false,
+                    limit: 1
+                }
+            ]
+
+        });
+
+    let payLoad = []
+    for (let group of groups) {
+        let numMembers = await group.countMemberships()
+        let groupjson = group.toJSON()
+        groupjson.numMembers = numMembers
+        let previewImage = groupjson.GroupImages[0]
+        if (previewImage){
+            previewImage = previewImage.url
+        } else {
+            previewImage = null
+        }
+        groupjson.previewImage = previewImage
+        delete groupjson.GroupImages
+        payLoad.push(groupjson)
+
+        // console.log(await group.createMembership({userId: 4, status: 'member'}))
+        // console.log(Object.getOwnPropertyNames(group.__proto__))  //group.prototype for model
+    }
+    //groups.tojson
+    //use Association
+    //groups.has +++> hasMany
+    //lazy load aggregrate data ! findall
+
+    res.json({Groups: payLoad})
     } catch (error) {
         next(error);
     }
@@ -65,18 +86,41 @@ router.get( '/current' , requireAuth, async (req, res) => {
     try {
         const userId = req.user.id;
         const groups = await Group.findAll({
-            include: [{
+            include: [
+                {
                 model: Membership,
                 where: { userId },
-                attributes:[]
-            }],
+                attributes: []
+                },
+                {
+                    model: GroupImage,
+                    where: {
+                        preview: true
+                    },
+                    attributes: ["url"],
+                    required: false,
+                    limit: 1
+                }
+        ],
             attributes: [
-                'id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
-                [sequelize.literal('(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group".id)'), 'numMembers'],
-                [sequelize.literal('(SELECT url FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group".id)'), 'previewImage']
-            ]
+                'id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt'],
         });
-        res.json({Groups: groups})
+        let payLoad = []
+        for (let group of groups) {
+        let numMembers = await group.countMemberships()
+        let groupjson = group.toJSON()
+        groupjson.numMembers = numMembers
+        let previewImage = groupjson.GroupImages[0]
+        if (previewImage){
+            previewImage = previewImage.url
+        } else {
+            previewImage = null
+        }
+        groupjson.previewImage = previewImage
+        delete groupjson.GroupImages
+        payLoad.push(groupjson)
+    }
+        res.json({Groups: payLoad})
     } catch(error) {
         console.error('Error retrieving groups:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -87,8 +131,7 @@ router.get( '/:groupId' , async (req, res, next) => {
     try {
         const groupId = req.params.groupId;
         const group = await Group.findByPk(groupId, {
-        attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
-        [sequelize.literal('(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group".id)'), 'numMembers']],
+        attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt'],
         include: [
             {
                 model: GroupImage,
@@ -105,14 +148,22 @@ router.get( '/:groupId' , async (req, res, next) => {
                 attributes: ['id', 'groupId', 'address', 'city', 'state', 'lat', 'lng']
             }
         ],
-        raw: true,
     })
 
     if (!group) {
         return res.status(404).json({ error: 'Group not found' });
     }
 
-    res.json({Groups: group, })
+    let payLoad = []
+    let numMembers = await group.countMemberships()
+    let groupjson = group.toJSON()
+    let Organizer = groupjson.User
+    groupjson.Organizer = Organizer
+    delete groupjson.User
+    groupjson.numMembers = numMembers
+    payLoad.push(groupjson)
+
+    res.json({Groups: payLoad, })
     } catch (error) {
         next(error);
     }
