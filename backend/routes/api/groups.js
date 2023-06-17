@@ -39,7 +39,6 @@ router.get( '/' , async (req, res, next) => {
         attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
         [sequelize.literal('(SELECT COUNT(*) FROM "Memberships" WHERE "Memberships"."groupId" = "Group".id)'), 'numMembers'],
         [sequelize.literal('(SELECT url FROM "GroupImages" WHERE "GroupImages"."groupId" = "Group".id)'), 'previewImage']],
-        raw: true,
     })
     res.json({Groups: groups})
     } catch (error) {
