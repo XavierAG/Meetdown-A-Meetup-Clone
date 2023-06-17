@@ -31,10 +31,26 @@ const validateSignup = [
     .withMessage('State is required'),
     handleValidationErrors
 ]
+const validateVenueSignup = [
+    check('address')
+    .exists({ checkFalsy: true })
+    .withMessage('Street address is required'),
+    check('city')
+    .exists({ checkFalsy: true })
+    .withMessage("City is required"),
+    check('state')
+    .exists({ checkFalsy: true })
+    .withMessage('State is required'),
+    check('lat')
+    .exists({ checkFalsy: true })
+    .withMessage('Latitude is required'),
+    check('lng')
+    .exists({ checkFalsy: true })
+    .withMessage('Longitude is required'),
+    handleValidationErrors
+]
 
 router.get( '/' , async (req, res, next) => {
-
-
     try {
         const groups = await Group.findAll({
             attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt'],
@@ -68,14 +84,14 @@ router.get( '/' , async (req, res, next) => {
         payLoad.push(groupjson)
 
         // console.log(await group.createMembership({userId: 4, status: 'member'}))
-        // console.log(Object.getOwnPropertyNames(group.__proto__))  //group.prototype for model
+        //console.log(Object.getOwnPropertyNames(group.__proto__))  //group.prototype for model
     }
     //groups.tojson
     //use Association
     //groups.has +++> hasMany
     //lazy load aggregrate data ! findall
 
-    res.json({Groups: payLoad})
+    res.status(200).json({Groups: payLoad})
     } catch (error) {
         next(error);
     }
@@ -119,7 +135,7 @@ router.get( '/current' , requireAuth, async (req, res) => {
         delete groupjson.GroupImages
         payLoad.push(groupjson)
     }
-        res.json({Groups: payLoad})
+    res.status(200).json({Groups: payLoad})
     } catch(error) {
         console.error('Error retrieving groups:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -162,7 +178,7 @@ router.get( '/:groupId' , async (req, res, next) => {
     groupjson.numMembers = numMembers
     payLoad.push(groupjson)
 
-    res.json({Groups: payLoad, })
+    res.status(200).json({Groups: payLoad, })
     } catch (error) {
         next(error);
     }
@@ -260,4 +276,78 @@ router.delete('/:groupId', requireAuth, async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+
+  router.get( '/:groupId/venues', requireAuth, async (req, res, next) => {
+    try {
+        const groupId = req.params.groupId;
+        const userId = req.user.id;
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        const isOrganizer = await Group.findOne({
+            where: {
+              id: groupId,
+              organizerId: userId,
+            },
+        });
+        const isCoHost = await Membership.findOne({
+            where: {
+              groupId: groupId,
+              userId: userId,
+              status: 'co-host',
+            },
+          });
+        if (!isOrganizer && !isCoHost) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+        const venues = await Venue.findAll({
+            where: { groupId: groupId },
+            attributes: ['id', 'groupId', 'address', 'city', 'state', 'lat', 'lng'],
+        });
+
+        res.status(200).json({ Venues: venues });
+    } catch (error) {
+        next(error);
+    }
+})
+
+router.post( '/:groupId/venues', requireAuth, validateVenueSignup, async (req, res, next) => {
+    try {
+        const groupId = req.params.groupId;
+        const userId = req.user.id;
+        const { address, city, state, lat, lng } = req.body;
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        const isOrganizer = await Group.findOne({
+            where: {
+              id: groupId,
+              organizerId: userId,
+            },
+        });
+        const isCoHost = await Membership.findOne({
+            where: {
+              groupId: groupId,
+              userId: userId,
+              status: 'co-host',
+            },
+          });
+        if (!isOrganizer && !isCoHost) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
+        const venue = await Venue.create({ groupId, address, city, state, lat, lng })
+
+        res.status(201).json({ Venues: venue });
+    } catch (error) {
+        next(error);
+    }
+})
+
 module.exports = router;
