@@ -36,10 +36,23 @@ const validateSignup = [
 router.get( '/' , async (req, res, next) => {
     try {
     const groups = await Group.findAll({
-        attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt',
-        [sequelize.fn(
-            'COUNT',
-            sequelize.col('Memberships.groupId')), 'numMembers']],
+        attributes: ['id', 'organizerId', 'name', 'about', 'type', 'private', 'city', 'state', 'createdAt', 'updatedAt'],
+        // [sequelize.fn(
+        //     'COUNT',
+        //     sequelize.col('Memberships.groupId')), 'numMembers']],
+        include: [/*{
+            model: Membership,
+            attributes: []
+        }*/
+        {
+            model: GroupImage,
+            where: {
+                preview: true
+            },
+            attributes: ["url"],
+            required: false
+        }
+    ]
 
     });
     res.json({Groups: groups})
