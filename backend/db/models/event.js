@@ -60,14 +60,14 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     startDate: {
-      type: DataTypes.DATETIME,
+      type: DataTypes.DATE,
       allowNull: false,
       validate: {
         isAfter: new Date().toISOString(),
       },
     },
     endDate: {
-      type: DataTypes.DATETIME,
+      type: DataTypes.DATE,
       allowNull: false,
       validate: {
         isAfterStartDate(value) {
