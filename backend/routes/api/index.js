@@ -3,8 +3,8 @@ const router = require('express').Router();
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const groupsRouter = require('./groups.js')
-const eventRouter = require('./event.js')
-const venueRouter = require('./venue.js')
+const eventRouter = require('./events.js')
+const venueRouter = require('./venues.js')
 const { restoreUser } = require("../../utils/auth.js");
 
 router.use(restoreUser);
@@ -15,9 +15,9 @@ router.use('/users', usersRouter);
 
 router.use('/groups', groupsRouter)
 
-router.use('/event', eventRouter)
+router.use('/events', eventRouter)
 
-router.use('/venue', venueRouter)
+router.use('/venues', venueRouter)
 
 router.post('/test', (req, res) => {
   res.json({ requestBody: req.body });
