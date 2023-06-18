@@ -69,7 +69,7 @@ const validateEventSignup = [
     .withMessage('Capacity must be an integer'),
     check('price')
     .exists({ checkFalsy: true })
-    .isInt()
+    .isFloat()
     .withMessage('Price is invalid'),
     check('description')
     .exists({ checkFalsy: true })
@@ -87,7 +87,7 @@ const validateEventSignup = [
     .custom((value, { req }) => {
       const startDate = new Date(req.body.startDate);
       const endDate = new Date(value);
-      if (endDate <= startDate) {
+      if (endDate < startDate) {
         throw new Error('End date is less than start day');
       }
       return true;
@@ -355,7 +355,8 @@ router.delete('/:groupId', requireAuth, async (req, res) => {
 
         res.status(200).json({ Venues: venues });
     } catch (error) {
-        next(error);
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 })
 
@@ -391,7 +392,8 @@ router.post( '/:groupId/venues', requireAuth, validateVenueSignup, async (req, r
 
         res.status(201).json({ Venues: venue });
     } catch (error) {
-        next(error);
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 })
 
@@ -446,7 +448,8 @@ router.get( '/:groupId/events' , async (req, res, next) => {
     }
     res.status(200).json({Events: payLoad})
     } catch (error) {
-        next(error);
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 })
 
@@ -482,7 +485,8 @@ router.post( '/:groupId/events', requireAuth, validateEventSignup, async (req, r
 
         res.status(200).json({ event });
     } catch (error) {
-        next(error);
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
     }
 })
 module.exports = router;
