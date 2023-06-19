@@ -53,9 +53,44 @@ const validateEventSignup = [
     }),
   handleValidationErrors,
 ]
+const validateQueryParams = (req, res, next) => {
+    const { page = 1, size = 20, name, type, startDate } = req.query;
 
-router.get( '/' , async (req, res, next) => {
+    // Validate query parameters
+    const errors = {};
+    if (page < 1 || page > 10) {
+      errors.page = 'Page must be between 1 and 10';
+    }
+    if (size < 1 || size > 20) {
+      errors.size = 'Size must be between 1 and 20';
+    }
+    if (type && type !== 'Online' && type !== 'In Person') {
+      errors.type = "Type must be 'Online' or 'In Person'";
+    }
+    if (startDate && !moment(startDate, 'YYYY-MM-DD HH:mm:ss', true).isValid()) {
+      errors.startDate = 'Start date must be a valid datetime';
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return res.status(400).json({ message: 'Bad Request', errors });
+    }
+
+    // Add the validated query parameters to the request object
+    req.validatedQueryParams = {
+      page: parseInt(page),
+      size: parseInt(size),
+      name,
+      type,
+      startDate,
+    };
+
+    next();
+  };
+
+router.get( '/' , validateQueryParams, async (req, res, next) => {
     try {
+        const { page, size, name, type, startDate } = req.validatedQueryParams;
+        const offset = (page - 1) * size;
         const events = await Event.findAll({
             attributes: ['id', 'groupId', 'venueId', 'name', 'type', 'startDate', 'endDate'],
                 include: [
@@ -76,8 +111,9 @@ router.get( '/' , async (req, res, next) => {
                     model: Venue,
                     attributes: ['id', 'city', 'state']
                 }
-            ]
-
+            ],
+            offset,
+            limit: size
         });
 
     let payLoad = []
@@ -382,9 +418,9 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
       console.log(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  });
+});
 
-  router.put('/:eventId/attendance', requireAuth, async (req, res) => {
+router.put('/:eventId/attendance', requireAuth, async (req, res) => {
     try {
       const { eventId } = req.params;
       const { userId, status } = req.body;
@@ -417,6 +453,47 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
       console.log(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  });
+});
+
+router.delete('/:eventId/attendance', requireAuth, async (req, res) => {
+try {
+    const { eventId } = req.params;
+    const { userId } = req.body;
+    const event = await Event.findByPk(eventId);
+
+    if (!event) {
+      return res.status(404).json({ message: "Event couldn't be found" });
+    }
+
+    const attendance = await Attendance.findOne({
+      where: {
+        eventId: event.id,
+        userId: userId,
+      },
+    });
+
+    if (!attendance) {
+      return res.status(404).json({ message: "Attendance does not exist for this User" });
+    }
+
+    const isOrganizer = await Group.findOne({
+      where: {
+        id: event.groupId,
+        organizerId: req.user.id,
+      },
+    });
+
+    if (!isOrganizer && userId !== req.user.id) {
+      return res.status(403).json({ message: "Only the User or organizer may delete an Attendance" });
+    }
+
+    await attendance.destroy();
+
+    res.status(200).json({ message: "Successfully deleted attendance from event" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
 
 module.exports = router;

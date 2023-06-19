@@ -129,7 +129,7 @@ router.get( '/' , async (req, res, next) => {
         payLoad.push(groupjson)
 
         // console.log(await group.createMembership({userId: 4, status: 'member'}))
-        console.log(Object.getOwnPropertyNames(group.__proto__))  //group.prototype for model
+        //console.log(Object.getOwnPropertyNames(group.__proto__))  //group.prototype for model
     }
     //groups.tojson
     //use Association
