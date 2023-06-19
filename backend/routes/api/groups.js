@@ -129,7 +129,7 @@ router.get( '/' , async (req, res, next) => {
         payLoad.push(groupjson)
 
         // console.log(await group.createMembership({userId: 4, status: 'member'}))
-        //console.log(Object.getOwnPropertyNames(group.__proto__))  //group.prototype for model
+        console.log(Object.getOwnPropertyNames(group.__proto__))  //group.prototype for model
     }
     //groups.tojson
     //use Association
@@ -489,4 +489,212 @@ router.post( '/:groupId/events', requireAuth, validateEventSignup, async (req, r
         res.status(500).json({ message: "Internal server error" });
     }
 })
+
+router.get('/:groupId/members', async (req, res) => {
+    try {
+        const { groupId } = req.params;
+        const userId = req.user.id;
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        const isOrganizer = await Group.findOne({
+            where: {
+              id: groupId,
+              organizerId: userId,
+            },
+        });
+        const isCoHost = await Membership.findOne({
+            where: {
+              groupId: groupId,
+              userId: userId,
+              status: 'co-host',
+            },
+          });
+        if (!isOrganizer && !isCoHost) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
+
+        const members = await User.findAll({
+            attributes: ["id", "firstName", "lastName"],
+            include: [
+                {
+                    model: Membership,
+                    attributes: ["status"],
+                    where: {
+                        groupId: groupId,
+                    }
+                },
+            ],
+        })
+
+        res.status(200).json({ Members: members })
+
+    } catch (e) {
+        console.log(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+  })
+
+  router.post('/:groupId/membership', requireAuth, async (req, res) => {
+    try {
+      const { groupId } = req.params;
+      const userId = req.user.id;
+
+      const group = await Group.findByPk(groupId);
+
+      if (!group) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+      }
+
+      const existingMembership = await Membership.findOne({
+        where: {
+          groupId: groupId,
+          userId: userId,
+        },
+      });
+
+      if (existingMembership && existingMembership.status === 'pending') {
+        return res.status(400).json({ message: "Membership has already been requested" });
+      }
+
+      if (existingMembership && !existingMembership.status === 'pending') {
+        return res.status(400).json({ message: "User is already a member of the group" });
+      }
+
+      const newMembership = await Membership.create({
+        groupId: groupId,
+        userId: userId,
+        status: 'pending',
+      });
+
+      res.status(200).json({
+        memberId: newMembership.userId,
+        status: newMembership.status,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  router.put('/:groupId/membership', requireAuth, async (req, res) => {
+    try {
+      const { groupId } = req.params;
+      const  userId  = req.user.id;
+      const { memberId, status } = req.body;
+
+      const group = await Group.findByPk(groupId);
+
+      if (!group) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+      }
+
+      const existingMembership = await Membership.findOne({
+        where: {
+          groupId: groupId,
+          userId: memberId,
+        },
+      });
+
+      if (!existingMembership) {
+        return res.status(404).json({ message: "Membership between the user and the group does not exist" });
+      }
+
+      if (status === 'pending') {
+        return res.status(400).json({ message: "User is already a member of the group" });
+      }
+
+      if (status === 'member') {
+        const isOrganizer = await Group.findOne({
+          where: {
+            id: groupId,
+            organizerId: userId,
+          },
+        });
+        const isCoHost = await Membership.findOne({
+          where: {
+            groupId: groupId,
+            userId: userId,
+            status: 'co-host',
+          },
+        });
+
+        if (!isOrganizer && !isCoHost) {
+          return res.status(403).json({ message: "Access denied" });
+        }
+
+        if (existingMembership.status === 'pending') {
+          existingMembership.status = 'member';
+          await existingMembership.save();
+        }
+      } else if (status === 'co-host') {
+        const isOrganizer = await Group.findOne({
+          where: {
+            id: groupId,
+            organizerId: userId,
+          },
+        });
+
+        if (!isOrganizer) {
+          return res.status(403).json({ message: "Access denied" });
+        }
+
+        if (existingMembership.status === 'member') {
+          existingMembership.status = 'co-host';
+          await existingMembership.save();
+        }
+      } else {
+        return res.status(400).json({ message: "Invalid membership status" });
+      }
+
+      res.status(200).json({
+        id: existingMembership.id,
+        groupId: existingMembership.groupId,
+        memberId: existingMembership.userId,
+        status: existingMembership.status,
+      });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  router.delete('/:groupId/membership', requireAuth, async (req, res) => {
+    try {
+      const { groupId } = req.params;
+      const  userId  = req.user.id;
+      const { memberId } = req.body;
+
+      const group = await Group.findByPk(groupId);
+
+      if (!group) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+      }
+
+      const membership = await Membership.findOne({
+        where: {
+          groupId: groupId,
+          userId: memberId,
+        },
+      });
+
+      if (!membership) {
+        return res.status(404).json({ message: "Membership does not exist for this User" });
+      }
+
+      if (group.organizerId !== userId && membership.userId !== userId) {
+        return res.status(403).json({ message: "Access denied" });
+      }
+
+      await membership.destroy();
+
+      res.status(200).json({ message: "Successfully deleted membership from group" });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
 module.exports = router;
