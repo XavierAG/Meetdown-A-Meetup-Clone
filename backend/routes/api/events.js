@@ -282,4 +282,141 @@ router.delete('/:eventId', requireAuth, async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+
+router.get('/:eventId/attendees', async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const userId = req.user.id;
+    const event = await Event.findByPk(eventId);
+
+    if (!event) {
+      return res.status(404).json({ message: "Event couldn't be found" });
+    }
+
+    const isOrganizer = await Group.findOne({
+        where: {
+          id: event.groupId,
+          organizerId: userId
+        }
+    });
+
+    const isCoHost = await Membership.findOne({
+        where: {
+          groupId: event.groupId,
+          userId: userId,
+          status: 'co-host',
+        },
+      });
+
+    let attendees;
+
+    if (isOrganizer || isCoHost) {
+      attendees = await User.findAll({
+        attributes: ["id", "firstName", "lastName"],
+        include: [
+          {
+            model: Attendance,
+            attributes: ["status"],
+            where: {
+              eventId: event.id,
+            },
+          },
+        ],
+      });
+    } else {
+      attendees = await User.findAll({
+        attributes: ["id", "firstName", "lastName"],
+        include: [
+          {
+            model: Attendance,
+            attributes: ["status"],
+            where: {
+              eventId: event.id,
+              status: { [Op.ne]: 'pending' },
+            },
+          },
+        ],
+      });
+    }
+
+    res.status(200).json({ Attendees: attendees });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.post('/:eventId/attendance', requireAuth, async (req, res) => {
+    try {
+      const { eventId } = req.params;
+      const userId = req.user.id;
+      const event = await Event.findByPk(eventId);
+
+      if (!event) {
+        return res.status(404).json({ message: "Event couldn't be found" });
+      }
+
+      const existingAttendance = await Attendance.findOne({
+        where: {
+          eventId: event.id,
+          userId: userId,
+        },
+      });
+
+      if (existingAttendance) {
+        if (existingAttendance.status === 'pending') {
+          return res.status(400).json({ message: "Attendance has already been requested" });
+        } else {
+          return res.status(400).json({ message: "User is already an attendee of the event" });
+        }
+      }
+
+      const newAttendance = await Attendance.create({
+        eventId: event.id,
+        userId: userId,
+        status: 'pending',
+      });
+
+      res.status(200).json(newAttendance);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+  router.put('/:eventId/attendance', requireAuth, async (req, res) => {
+    try {
+      const { eventId } = req.params;
+      const { userId, status } = req.body;
+      const event = await Event.findByPk(eventId);
+
+      if (!event) {
+        return res.status(404).json({ message: "Event couldn't be found" });
+      }
+
+      if (status === 'pending') {
+        return res.status(400).json({ message: "Cannot change an attendance status to pending" });
+      }
+
+      const attendance = await Attendance.findOne({
+        where: {
+          eventId: event.id,
+          userId: userId,
+        },
+      });
+
+      if (!attendance) {
+        return res.status(404).json({ message: "Attendance between the user and the event does not exist" });
+      }
+
+      attendance.status = status;
+      await attendance.save();
+
+      res.status(200).json(attendance);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
 module.exports = router;
