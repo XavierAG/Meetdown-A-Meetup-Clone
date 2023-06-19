@@ -37,6 +37,11 @@ router.put( '/:venueId', requireAuth, validateVenueSignup, async (req, res, next
         if (!venue) {
             return res.status(404).json({ error: "Venue couldn't be found"});
         }
+        const group = await Group.findByPk(groupId);
+
+        if (!group) {
+          return res.status(404).json({ error: "Group couldn't be found" });
+        }
 
         const isOrganizer = await Group.findOne({
             where: {
