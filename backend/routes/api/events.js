@@ -55,8 +55,6 @@ const validateEventSignup = [
 ]
 const validateQueryParams = (req, res, next) => {
     const { page = 1, size = 20, name, type, startDate } = req.query;
-
-    // Validate query parameters
     const errors = {};
     if (page < 1 || page > 10) {
       errors.page = 'Page must be between 1 and 10';
@@ -74,8 +72,6 @@ const validateQueryParams = (req, res, next) => {
     if (Object.keys(errors).length > 0) {
       return res.status(400).json({ message: 'Bad Request', errors });
     }
-
-    // Add the validated query parameters to the request object
     req.validatedQueryParams = {
       page: parseInt(page),
       size: parseInt(size),
