@@ -1,0 +1,18 @@
+.event-page {
+    margin: 100px auto;
+    max-width: 961px;
+    padding: 0px 15px;
+}
+.active-link {
+    color: #00798A;
+    text-decoration: underline;
+}
+
+.group-event h2 a:not(.active-link) {
+    color: #707070;
+    text-decoration: none;
+}
+.event-page h1 {
+    display: flex;
+    justify-content: flex-start;
+}

@@ -1,0 +1,44 @@
+.group-page {
+    margin: 100px auto;
+    max-width: 961px;
+    padding: 0px 15px;
+}
+
+.active-link {
+    color: #00798A;
+    text-decoration: underline;
+}
+
+.group-event h2 a:not(.active-link) {
+    color: #707070;
+    text-decoration: none;
+}
+
+.group-page h1 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.group-card {
+    padding: 12px 0px;
+    border-bottom: 0.1px solid #c7c6c6;
+}
+
+.group-card h3 {
+    font-size: 20px;
+}
+
+.group-card h2 {
+    font-size: 14px;
+    color: #7C6F50
+}
+
+.group-card p {
+    font-size: 14px;
+    color: #707070;
+}
+
+.member-private {
+    font-size: 14px;
+    color: #707070;
+}

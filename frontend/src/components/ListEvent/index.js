@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import "./ListGroup.css";
+import "./ListEvent.css";
 
-function ListGroup() {
+function ListEvent() {
   const [activeLink, setActiveLink] = useState("");
-  const [groups, setGroups] = useState([]);
+  const [events, setEvents] = useState([]);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
 
   useEffect(() => {
-    const fetchGroups = async () => {
+    const fetchEvents = async () => {
       try {
-        const response = await fetch("/api/groups");
+        const response = await fetch("/api/events");
         if (response.ok) {
           const data = await response.json();
-          setGroups(data.Groups);
+          setEvents(data.Events);
         } else {
           throw new Error("Failed to fetch group data");
         }
@@ -25,12 +25,12 @@ function ListGroup() {
       }
     };
 
-    fetchGroups();
+    fetchEvents();
   }, []);
 
   return (
-    <div className="group-page">
-      <h1>Groups in MeetDown</h1>
+    <div className="event-page">
+      <h1>Events in MeetDown</h1>
       <div className="group-event">
         <h2>
           <NavLink
@@ -51,21 +51,20 @@ function ListGroup() {
           </NavLink>
         </h2>
       </div>
-      {groups.map((group) => (
-        <div key={group.id} className="group-card">
-          <img src={group.previewImage} alt="Group Preview" />
-          <h3>{group.name}</h3>
-          <h2>
-            {group.city}, {group.state}
-          </h2>
-          <p>{group.about}</p>
-          <div className="member-private">
-            {group.numMembers} members - {group.private ? "private" : "public"}
-          </div>
+      {events.map((event) => (
+        <div key={event.id} className="event-card">
+          <img src={event.previewImage} alt="event Preview" />
+          <p>{event.startDate}</p>
+          <h2>{event.name}</h2>
+          <p>{event.Group.name}</p>
+          <p>
+            {event.Venue.city}, {event.Venue.state}
+          </p>
+          <div> {event.numAttending} attendees</div>
         </div>
       ))}
     </div>
   );
 }
 
-export default ListGroup;
+export default ListEvent;
