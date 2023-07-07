@@ -18,7 +18,6 @@ if (process.env.NODE_ENV !== "production") {
   window.store = store;
   window.sessionActions = sessionActions;
 }
-//testing
 
 function Root() {
   return (
