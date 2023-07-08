@@ -52,7 +52,7 @@ function LandingPage() {
         </div>
         <div className="column">
           <i class="fa-solid fa-users-line"></i>
-          <a href="/start-group" className="link">
+          <a href="/create-group" className="link">
             <h3>Start a group</h3>
           </a>
           <p>No group near you? Make one then!</p>

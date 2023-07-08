@@ -6,6 +6,7 @@ import Navigation from "./components/Navigation";
 import LandingPage from "./components/LandingPage";
 import ListGroup from "./components/ListGroup";
 import ListEvent from "./components/ListEvent";
+import CreateGroup from "./components/CreateGroup";
 
 function App() {
   const dispatch = useDispatch();
@@ -26,6 +27,9 @@ function App() {
         </Route>
         <Route exact path="/events">
           <ListEvent />
+        </Route>
+        <Route exact path="/create-group">
+          <CreateGroup />
         </Route>
       </Switch>
     </>

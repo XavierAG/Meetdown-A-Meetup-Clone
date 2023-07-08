@@ -52,17 +52,20 @@ function ListGroup() {
         </h2>
       </div>
       {groups.map((group) => (
-        <div key={group.id} className="group-card">
-          <img src={group.previewImage} alt="Group Preview" />
-          <h3>{group.name}</h3>
-          <h2>
-            {group.city}, {group.state}
-          </h2>
-          <p>{group.about}</p>
-          <div className="member-private">
-            {group.numMembers} members - {group.private ? "private" : "public"}
+        <a href={"/groups/" + group.name} key={group.id}>
+          <div key={group.id} className="group-card">
+            <img src={group.previewImage} alt="Group Preview" />
+            <h3>{group.name}</h3>
+            <h2>
+              {group.city}, {group.state}
+            </h2>
+            <p>{group.about}</p>
+            <div className="member-private">
+              {group.numMembers} members -{" "}
+              {group.private ? "private" : "public"}
+            </div>
           </div>
-        </div>
+        </a>
       ))}
     </div>
   );
