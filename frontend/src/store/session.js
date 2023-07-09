@@ -81,7 +81,7 @@ export const createGroup = (group) => async (dispatch) => {
   return response;
 };
 
-const initialState = { user: null };
+const initialState = { user: null, group: null };
 
 const sessionReducer = (state = initialState, action) => {
   let newState;
@@ -93,6 +93,10 @@ const sessionReducer = (state = initialState, action) => {
     case REMOVE_USER:
       newState = Object.assign({}, state);
       newState.user = null;
+      return newState;
+    case SET_GROUP:
+      newState = Object.assign({}, state);
+      newState.group = action.payload;
       return newState;
     default:
       return state;

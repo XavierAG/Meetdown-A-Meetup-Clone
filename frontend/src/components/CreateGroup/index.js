@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import * as sessionActions from "../../store/session";
 import "./CreateGroup.css";
 import OpenModalButton from "../OpenModalButton";
@@ -8,7 +9,9 @@ import LoginFormModal from "../LoginFormModal";
 function CreateGroup() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
+  const group = useSelector((state) => state.session.group);
   const [name, setName] = useState("");
+  const history = useHistory();
   const [about, setAbout] = useState("");
   const [type, setType] = useState("");
   const [isPrivate, setIsPrivate] = useState("");
@@ -17,7 +20,6 @@ function CreateGroup() {
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
-    console.log(!!isPrivate);
     e.preventDefault();
     if (sessionUser) {
       setErrors({});
@@ -31,12 +33,18 @@ function CreateGroup() {
           city,
           state,
         })
-      ).catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+      )
+        .then((res) => {
+          if (res.ok) {
+            history.push(`/groups/${group.id}`);
+          }
+        })
+        .catch(async (res) => {
+          const data = await res.json();
+          if (data && data.errors) {
+            setErrors(data.errors);
+          }
+        });
     }
   };
   return (
@@ -102,6 +110,7 @@ function CreateGroup() {
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
+            <option value="">--Select--</option>
             <option value="In person">In person</option>
             <option value="Online">Online</option>
           </select>
