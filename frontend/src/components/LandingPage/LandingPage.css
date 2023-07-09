@@ -4,7 +4,7 @@
     justify-content: center;
     align-items: center;
     max-width: 1120px;
-    margin: 100px auto;
+    margin: 50px auto;
 }
 .landing-page p {
     color: black;
@@ -98,4 +98,7 @@
   }
   .section4 button:hover {
     background-color: #008fa3;
+  }
+  .disabled-button {
+    color: gray
   }

@@ -7,7 +7,7 @@ import LandingPage from "./components/LandingPage";
 import ListGroup from "./components/ListGroup";
 import ListEvent from "./components/ListEvent";
 import CreateGroup from "./components/CreateGroup";
-
+import GroupInfo from "./components/GroupInfo";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -30,6 +30,9 @@ function App() {
         </Route>
         <Route exact path="/create-group">
           <CreateGroup />
+        </Route>
+        <Route exact path="/groups/:groupId?">
+          <GroupInfo />
         </Route>
       </Switch>
     </>

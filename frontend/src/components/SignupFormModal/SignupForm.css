@@ -1,8 +1,4 @@
-  .modal-container {
-    padding: 40px;
-  }
-
-  h1 {
+ h1 {
     text-align: center;
   }
 
@@ -33,13 +29,13 @@
 
   button {
     padding: 10px;
-    background-color: #4caf50;
+    background-color: #af534c;
     color: white;
-    border: none;
+    border: 2px solid black;
     border-radius: 4px;
     cursor: pointer;
   }
 
   button:hover {
-    background-color: #2e8433;
+    background-color: #8e281b;
   }

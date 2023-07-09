@@ -1,0 +1,137 @@
+.group-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1020px;
+    margin: 50px auto;
+}
+.upper-group {
+    display: flex;
+    margin-bottom: 20px;
+    margin: 0 auto;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.upper-group .left {
+    display: flex;
+    width: 576px;
+    align-items: center;
+    justify-content: center;
+    padding-right: 24px;
+  }
+
+.breadcrumb {
+    display: flex;
+    align-self: start;
+  }
+.upper-group .right {
+    display: flex;
+    width: 420px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+.upper-group .right h1,
+.upper-group .right p{
+    margin-top: 0;
+}
+.upper-group .right h1{
+    margin-bottom: 10px;
+    text-align: left;
+}
+.upper-group .right p{
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: grey;
+
+}
+
+.upper-group img {
+    width: 576px;
+    height: 324px;
+    margin-right: 20px;
+  }
+
+  .group-details {
+    margin-top: 20px;
+  }
+
+  .group-buttons{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+  }
+
+
+button .hidden {
+    display: none;
+}
+.group-buttons .org-button {
+    background-color: grey;
+    margin-right: 5px;
+}
+.group-buttons .join-button {
+    background-color: red;
+    font-size: 16px;
+}
+.grp-description {
+    margin-top: 20px;
+}
+.grp-description h2{
+    margin: 10px 0;
+}
+.grp-description .org{
+    color: gray;
+    margin: 8px 0 20px 0;
+}
+.grp-description p {
+    color: black;
+    margin: 8px 0;
+}
+.event-card {
+    display: flex;
+    text-decoration: none;
+    flex-direction: column;
+    align-items: flex-start;
+    border: 1px solid rgb(186, 183, 183);
+    background-color: rgb(232, 232, 232);
+    border-radius: 20px;
+    width: 600px;
+    height: auto;
+    padding: 20px 10px 20px 10px;
+    margin-bottom: 20px;
+}
+.top-event-card {
+    display: flex;
+}
+
+.top-event-card .left {
+    display: flex;
+    width: 250px;
+    height: 150px;
+    align-items: center;
+    justify-content: center;
+}
+.top-event-card .right {
+    display: flex;
+    width: 350px;
+    height: 150px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.top-event-card .right h4{
+    margin: 5px 0;
+    color: darkgreen;
+}
+.top-event-card .right h3{
+    margin: 8px 0;
+    color: black;
+}
+.top-event-card .right p{
+    color: gray;
+}
+.event-description {
+    color: black;
+}

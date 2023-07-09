@@ -1,10 +1,23 @@
 import React from "react";
 import "./LandingPage.css";
+import { useSelector } from "react-redux";
 import infographic from "../../assets/images/infographic.png";
 import OpenModalButton from "../OpenModalButton";
 import SignupFormModal from "../SignupFormModal";
 
 function LandingPage() {
+  const sessionUser = useSelector((state) => state.session.user);
+  const renderCreateGroupButton = () => {
+    if (sessionUser) {
+      return (
+        <a href="/create-group" className="link">
+          <h3>Start a group</h3>
+        </a>
+      );
+    } else {
+      return <h3 className="disabled-button">Start a group</h3>;
+    }
+  };
   return (
     <div className="landing-page">
       <div className="section1">
@@ -24,7 +37,7 @@ function LandingPage() {
         </div>
       </div>
       <div className="section2">
-        <h2>How MeetupDown works</h2>
+        <h2>How Meetdown works</h2>
         <p>
           Meet new people who share similar interests through online and in-
           person events. Its free to create an account
@@ -52,9 +65,7 @@ function LandingPage() {
         </div>
         <div className="column">
           <i class="fa-solid fa-users-line"></i>
-          <a href="/create-group" className="link">
-            <h3>Start a group</h3>
-          </a>
+          {renderCreateGroupButton()}
           <p>No group near you? Make one then!</p>
         </div>
       </div>
