@@ -23,6 +23,22 @@ function LoginFormModal() {
         }
       });
   };
+  const handleDemoLogin = (e) => {
+    e.preventDefault();
+    setErrors({});
+    const demoCredentials = {
+      credential: "demouser", // Replace with your demo account username or email
+      password: "password", // Replace with your demo account password
+    };
+    return dispatch(sessionActions.login(demoCredentials))
+      .then(closeModal)
+      .catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+      });
+  };
 
   return (
     <>
@@ -48,7 +64,12 @@ function LoginFormModal() {
             />
           </label>
           {errors.credential && <p>{errors.credential}</p>}
-          <button type="submit">Log In</button>
+          <div className="login-demo">
+            <button type="submit">Log In</button>
+            <button type="button" onClick={handleDemoLogin}>
+              Demo User
+            </button>
+          </div>
         </form>
       </div>
     </>
