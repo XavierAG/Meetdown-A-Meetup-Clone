@@ -98,10 +98,18 @@ function GroupInfo() {
                 >
                   Join the group
                 </button>
-                <button className={`org-button ${orgbutton}`}>
+                <button
+                  href="/create-event"
+                  className={`org-button ${orgbutton}`}
+                >
                   Create Event
                 </button>
-                <button className={`org-button ${orgbutton}`}>Update</button>
+                <button
+                  href="/edit-group"
+                  className={`org-button ${orgbutton}`}
+                >
+                  Update
+                </button>
                 <button className={`org-button ${orgbutton}`}>Delete</button>
               </div>
             </div>

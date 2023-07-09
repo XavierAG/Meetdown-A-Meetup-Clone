@@ -71,6 +71,9 @@ button .hidden {
     background-color: grey;
     margin-right: 5px;
 }
+.group-buttons .org-button:hover {
+    background-color: darkgray;
+}
 .group-buttons .join-button {
     background-color: red;
     font-size: 16px;

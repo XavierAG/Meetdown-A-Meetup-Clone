@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import * as sessionActions from "../../store/session";
 import "./CreateGroup.css";
-import OpenModalButton from "../OpenModalButton";
-import LoginFormModal from "../LoginFormModal";
 
 function CreateGroup() {
   const dispatch = useDispatch();
@@ -22,30 +20,22 @@ function CreateGroup() {
     e.preventDefault();
     if (sessionUser) {
       setErrors({});
-      return (
-        dispatch(
-          sessionActions.createGroup({
-            organizerId: sessionUser.id,
-            name,
-            about,
-            type,
-            isPrivate,
-            city,
-            state,
-          })
-        )
-          // .then((res) => {
-          //   if (res.ok) {
-          //     history.push(`/groups/${group.id}`);
-          //   }
-          // })
-          .catch(async (res) => {
-            const data = await res.json();
-            if (data && data.errors) {
-              setErrors(data.errors);
-            }
-          })
-      );
+      return dispatch(
+        sessionActions.createGroup({
+          organizerId: sessionUser.id,
+          name,
+          about,
+          type,
+          isPrivate,
+          city,
+          state,
+        })
+      ).catch(async (res) => {
+        const data = await res.json();
+        if (data && data.errors) {
+          setErrors(data.errors);
+        }
+      });
     }
   };
   return (

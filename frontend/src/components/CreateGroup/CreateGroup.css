@@ -14,7 +14,7 @@
 
 .create-group-page .form .section {
     border-top: 1px gray solid;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     width: 1020px;
 }
 
@@ -31,4 +31,7 @@
 .create-group-button {
     background-color: red;
     margin-top: 10px;
+}
+.create-group-page .form .section select {
+    margin-bottom: 8px;
 }

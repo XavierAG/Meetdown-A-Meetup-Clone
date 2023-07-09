@@ -8,6 +8,7 @@ import ListGroup from "./components/ListGroup";
 import ListEvent from "./components/ListEvent";
 import CreateGroup from "./components/CreateGroup";
 import GroupInfo from "./components/GroupInfo";
+import EventInfo from "./components/EventInfo";
 function App() {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
@@ -33,6 +34,9 @@ function App() {
         </Route>
         <Route exact path="/groups/:groupId?">
           <GroupInfo />
+        </Route>
+        <Route exact path="/events/:eventId?">
+          <EventInfo />
         </Route>
       </Switch>
     </>

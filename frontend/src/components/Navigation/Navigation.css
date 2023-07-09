@@ -29,3 +29,8 @@ li {
 .hidden {
   display: none;
 }
+.right-nav a {
+  margin: 0px 15px;
+  text-decoration: none;
+  color: darkgreen;
+}
