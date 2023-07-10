@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import * as sessionActions from "../../store/session";
+import { createGroup } from "../../store/group";
 import "./CreateGroup.css";
 
 function CreateGroup() {
@@ -21,7 +21,7 @@ function CreateGroup() {
     if (sessionUser) {
       setErrors({});
       return dispatch(
-        sessionActions.createGroup({
+        createGroup({
           organizerId: sessionUser.id,
           name,
           about,

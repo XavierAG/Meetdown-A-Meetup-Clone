@@ -2,14 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import "./GroupInfo.css";
+import OpenModalButton from "../OpenModalButton";
+import DeleteModal from "../DeleteModal";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function GroupInfo() {
   const { groupId } = useParams();
   const [group, setGroup] = useState(null);
   const [event, setEvent] = useState([]);
   const currentUser = useSelector((state) => state.session.user);
-  const [orgbutton, setOrgButton] = useState("hidden");
-  const [joinbutton, setJoinButton] = useState("hidden");
+  const history = useHistory();
 
   useEffect(() => {
     const fetchGroup = async () => {
@@ -47,20 +49,31 @@ function GroupInfo() {
     };
     fetchEvents();
   }, []);
-  useEffect(() => {
-    if (currentUser) {
-      if (currentUser.id === group.Organizer.id) {
-        setOrgButton("show");
-        setJoinButton("hidden");
-      } else {
-        setOrgButton("hidden");
-        setJoinButton("show");
-      }
-    } else {
-      setOrgButton("hidden");
-      setJoinButton("hidden");
-    }
-  }, [currentUser, group]);
+  let groupButtons;
+  if (currentUser?.id === group?.organizerId) {
+    groupButtons = (
+      <div>
+        <button onClick={() => history.push(`/groups/${groupId}/events/new`)}>
+          Create Event
+        </button>
+        <button onClick={() => history.push(`/groups/${groupId}/edit`)}>
+          Update
+        </button>
+        <OpenModalButton
+          buttonText="Delete"
+          modalComponent={
+            <DeleteModal deleteContext={{ type: "Group", groupId: groupId }} />
+          }
+        />
+      </div>
+    );
+  } else if (currentUser) {
+    groupButtons = (
+      <button onClick={() => alert("Feature coming soon")}>
+        Join the group
+      </button>
+    );
+  }
 
   if (!group) {
     return <div>Loading...</div>;
@@ -75,7 +88,7 @@ function GroupInfo() {
         <div className="upper">
           <div className="upper-group">
             <div className="left">
-              <img src={group.image} alt="Group Image" />
+              <img src={group.GroupImages[0].url} alt="Group Preview" />
             </div>
 
             <div className="right">
@@ -91,27 +104,7 @@ function GroupInfo() {
                 Organized by {group.Organizer.firstName}{" "}
                 {group.Organizer.lastName}
               </p>
-              <div className="group-buttons">
-                <button
-                  className={`join-button ${joinbutton}`}
-                  onClick={() => alert("Feature coming soon")}
-                >
-                  Join the group
-                </button>
-                <button
-                  href="/create-event"
-                  className={`org-button ${orgbutton}`}
-                >
-                  Create Event
-                </button>
-                <button
-                  href="/edit-group"
-                  className={`org-button ${orgbutton}`}
-                >
-                  Update
-                </button>
-                <button className={`org-button ${orgbutton}`}>Delete</button>
-              </div>
+              <div className="group-buttons">{groupButtons}</div>
             </div>
           </div>
         </div>

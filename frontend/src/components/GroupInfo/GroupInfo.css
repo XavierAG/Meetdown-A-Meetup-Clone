@@ -116,6 +116,10 @@ button .hidden {
     align-items: center;
     justify-content: center;
 }
+.top-event-card .left img {
+  max-width: 250px;
+  max-height: 150px;
+}
 .top-event-card .right {
     display: flex;
     width: 350px;

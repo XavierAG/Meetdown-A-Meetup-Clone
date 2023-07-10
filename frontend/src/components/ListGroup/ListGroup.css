@@ -20,12 +20,32 @@
 }
 
 .group-card {
+    display: flex;
     padding: 12px 0px;
     border-bottom: 0.1px solid #c7c6c6;
+    flex-direction: row;
+}
+.group-card img {
+    max-width: 180px;
+    max-height: 150px;
+
+}
+.group-card .left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 20px;
+    width:200px;
+}
+.group-card .right {
+    margin-right: 20px;
+
 }
 
 .group-card h3 {
     font-size: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .group-card h2 {
@@ -41,4 +61,7 @@
 .member-private {
     font-size: 14px;
     color: #707070;
+}
+.groups-listed {
+    cursor: pointer;
 }

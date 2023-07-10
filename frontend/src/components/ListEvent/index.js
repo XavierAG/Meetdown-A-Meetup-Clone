@@ -52,15 +52,19 @@ function ListEvent() {
         </h2>
       </div>
       {events.map((event) => (
-        <div key={event.id} className="event-card">
-          <img src={event.previewImage} alt="event Preview" />
-          <p>{event.startDate}</p>
-          <h2>{event.name}</h2>
-          <p>{event.Group.name}</p>
-          <p>
-            {event.Venue.city}, {event.Venue.state}
-          </p>
-          <div> {event.numAttending} attendees</div>
+        <div key={event.id} className="event-cards">
+          <div className="left">
+            <img src={event.previewImage} alt="event Preview" />
+          </div>
+          <div className="right">
+            <p>{event.startDate}</p>
+            <h2>{event.name}</h2>
+            <p>{event.Group.name}</p>
+            <p>
+              {event.Venue.city}, {event.Venue.state}
+            </p>
+            <div> {event.numAttending} attendees</div>
+          </div>
         </div>
       ))}
     </div>

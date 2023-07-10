@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./LandingPage.css";
 import { useSelector } from "react-redux";
 import infographic from "../../assets/images/infographic.png";
@@ -7,6 +7,7 @@ import SignupFormModal from "../SignupFormModal";
 
 function LandingPage() {
   const sessionUser = useSelector((state) => state.session.user);
+  const [joinBotton, setJoinButton] = useState("show");
   const renderCreateGroupButton = () => {
     if (sessionUser) {
       return (
@@ -18,6 +19,19 @@ function LandingPage() {
       return <h3 className="disabled-button">Start a group</h3>;
     }
   };
+  const renderJoinButton = () => {
+    if (sessionUser) {
+      return null;
+    } else {
+      return (
+        <OpenModalButton
+          buttonText="Join Meetup"
+          modalComponent={<SignupFormModal />}
+        />
+      );
+    }
+  };
+
   return (
     <div className="landing-page">
       <div className="section1">
@@ -69,12 +83,7 @@ function LandingPage() {
           <p>No group near you? Make one then!</p>
         </div>
       </div>
-      <div className="section4">
-        <OpenModalButton
-          buttonText="Join Meetup"
-          modalComponent={<SignupFormModal />}
-        />
-      </div>
+      <div className="section4">{renderJoinButton()}</div>
     </div>
   );
 }
