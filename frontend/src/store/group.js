@@ -30,7 +30,7 @@ export const createGroup = (group) => async (dispatch) => {
   });
   const data = await response.json();
   dispatch(setGroup(data.group));
-  return response;
+  return data;
 };
 
 export const deleteGroup = (groupId) => async (dispatch) => {

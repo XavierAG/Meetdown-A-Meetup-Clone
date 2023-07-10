@@ -80,6 +80,7 @@ button .hidden {
 }
 .grp-description {
     margin-top: 20px;
+    padding-left: 20px;
 }
 .grp-description h2{
     margin: 10px 0;
@@ -141,4 +142,7 @@ button .hidden {
 }
 .event-description {
     color: black;
+}
+.events-group {
+    padding-left: 20px;
 }

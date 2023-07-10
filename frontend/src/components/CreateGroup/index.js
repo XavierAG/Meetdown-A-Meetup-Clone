@@ -7,6 +7,7 @@ import "./CreateGroup.css";
 function CreateGroup() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
+  const sessionGroup = useSelector((state) => state.session.group);
   const [name, setName] = useState("");
   const history = useHistory();
   const [about, setAbout] = useState("");
@@ -20,7 +21,7 @@ function CreateGroup() {
     e.preventDefault();
     if (sessionUser) {
       setErrors({});
-      return dispatch(
+      const newGroup = await dispatch(
         createGroup({
           organizerId: sessionUser.id,
           name,

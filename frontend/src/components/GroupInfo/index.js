@@ -90,7 +90,6 @@ function GroupInfo() {
             <div className="left">
               <img src={group.GroupImages[0].url} alt="Group Preview" />
             </div>
-
             <div className="right">
               <h1>{group.name}</h1>
               <p>

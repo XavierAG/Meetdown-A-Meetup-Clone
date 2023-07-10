@@ -27,8 +27,8 @@ function LoginFormModal() {
     e.preventDefault();
     setErrors({});
     const demoCredentials = {
-      credential: "demouser", // Replace with your demo account username or email
-      password: "password", // Replace with your demo account password
+      credential: "DemoUser",
+      password: "password",
     };
     return dispatch(sessionActions.login(demoCredentials))
       .then(closeModal)
