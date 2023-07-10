@@ -142,7 +142,11 @@ button .hidden {
 }
 .event-description {
     color: black;
+    padding-left: 10px;
 }
 .events-group {
     padding-left: 20px;
+}
+.no-preview {
+    color: black;
 }

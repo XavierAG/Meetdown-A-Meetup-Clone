@@ -9,20 +9,32 @@
     text-decoration: underline;
 }
 
-.group-event h2 a:not(.active-link) {
+.group-event h1 a:not(.active-link) {
     color: #707070;
     text-decoration: none;
 }
 
-.group-page h1 {
+.group-event {
     display: flex;
     justify-content: flex-start;
 }
-
+.group-page h1{
+    margin: 5px 0px;
+    padding-left: 10px;
+}
+.group-page h4 {
+    display: flex;
+    justify-content: flex-start;
+    color: gray;
+    padding-left: 10px;
+    margin: 5px 0px;
+    padding-bottom: 10px;
+}
 .group-card {
     display: flex;
-    padding: 12px 0px;
-    border-bottom: 0.1px solid #c7c6c6;
+    padding: 20px 0px;
+    border-bottom: 1px solid #c7c6c6;
+    border-top: 1px solid #c7c6c6;
     flex-direction: row;
 }
 .group-card img {

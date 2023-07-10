@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { createGroup } from "../../store/group";
+import { addGroupImage } from "../../store/group";
 import "./CreateGroup.css";
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 function CreateGroup() {
   const dispatch = useDispatch();
@@ -15,13 +17,14 @@ function CreateGroup() {
   const [isPrivate, setIsPrivate] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
+  const [url, setUrl] = useState("");
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (sessionUser) {
       setErrors({});
-      const newGroup = await dispatch(
+      dispatch(
         createGroup({
           organizerId: sessionUser.id,
           name,
@@ -31,12 +34,36 @@ function CreateGroup() {
           city,
           state,
         })
-      ).catch(async (res) => {
-        const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+      )
+        .then((createGroupResponse) => {
+          if (createGroupResponse) {
+            const { group } = createGroupResponse.payload;
+
+            dispatch(addGroupImage(group.id, url, true))
+              .then((addedImageResponse) => {
+                if (addedImageResponse) {
+                  // Handle success
+                  history.push(`/groups/${group.id}`);
+                } else {
+                  throw new Error("Failed to add group image.");
+                }
+              })
+              .catch((error) => {
+                // Handle error
+                console.log(error);
+                setErrors({
+                  submit: "An error occurred. Please try again later.",
+                });
+              });
+          } else {
+            throw new Error("Failed to create group.");
+          }
+        })
+        .catch((error) => {
+          // Handle error
+          console.log(error);
+          setErrors({ submit: "An error occurred. Please try again later." });
+        });
     }
   };
   return (
@@ -117,6 +144,13 @@ function CreateGroup() {
             <option value="">Public</option>
           </select>
           {errors.private && <p className="error">{errors.private}</p>}
+          <input
+            type="text"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Image URL"
+            required
+          />
         </div>
         <div className="section">
           <button className="create-group-button" type="submit">

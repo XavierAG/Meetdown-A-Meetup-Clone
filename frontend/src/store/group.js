@@ -1,7 +1,8 @@
 import { csrfFetch } from "./csrf";
 
 const SET_GROUP = "session/setGroup";
-const DELETE_GROUP = "session/deleteGroup";
+const DELETE_GROUP = "session/removeGroup";
+const SET_IMAGE = "session/setImg";
 
 const setGroup = (group) => {
   return {
@@ -14,23 +15,37 @@ const removeGroup = () => {
     type: DELETE_GROUP,
   };
 };
+const setImg = (groupId, url, preview) => {
+  return {
+    type: SET_IMAGE,
+    payload: { groupId, url, preview },
+  };
+};
 
 export const createGroup = (group) => async (dispatch) => {
   const { city, state, name, about, type, private: isPrivate } = group;
-  const response = await csrfFetch("/api/groups", {
-    method: "POST",
-    body: JSON.stringify({
-      name,
-      about,
-      type,
-      private: !!isPrivate,
-      city,
-      state,
-    }),
-  });
-  const data = await response.json();
-  dispatch(setGroup(data.group));
-  return data;
+  try {
+    const response = await csrfFetch("/api/groups", {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        about,
+        type,
+        private: !!isPrivate,
+        city,
+        state,
+      }),
+    });
+    if (response.ok) {
+      dispatch(createGroup());
+      return true;
+    } else {
+      const data = await response.json();
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
 };
 
 export const deleteGroup = (groupId) => async (dispatch) => {
@@ -50,7 +65,28 @@ export const deleteGroup = (groupId) => async (dispatch) => {
   }
 };
 
-const initialState = { group: null };
+export const addGroupImage = (groupId, url, preview) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/groups/${groupId}/images`, {
+      method: "POST",
+      body: JSON.stringify({
+        url,
+        preview,
+      }),
+    });
+    if (response.ok) {
+      dispatch(addGroupImage());
+      return true;
+    } else {
+      const data = await response.json();
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+};
+
+const initialState = { group: null, image: null };
 
 const groupReducer = (state = initialState, action) => {
   let newState;
@@ -62,6 +98,10 @@ const groupReducer = (state = initialState, action) => {
     case DELETE_GROUP:
       newState = Object.assign({}, state);
       newState.group = null;
+      return newState;
+    case SET_IMAGE:
+      newState = Object.assign({}, state);
+      newState.image = action.payload;
       return newState;
     default:
       return state;

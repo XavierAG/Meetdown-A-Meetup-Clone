@@ -32,9 +32,8 @@ function ListGroup() {
 
   return (
     <div className="group-page">
-      <h1>Groups in MeetDown</h1>
       <div className="group-event">
-        <h2>
+        <h1>
           <NavLink
             exact
             to="/events"
@@ -51,8 +50,9 @@ function ListGroup() {
           >
             Groups
           </NavLink>
-        </h2>
+        </h1>
       </div>
+      <h4>Groups in Meetdown</h4>
       {groups.map((group) => (
         <a
           className="groups-listed"

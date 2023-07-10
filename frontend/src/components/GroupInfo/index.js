@@ -37,9 +37,22 @@ function GroupInfo() {
         const response = await fetch("/api/events");
         if (response.ok) {
           const data = await response.json();
-          if (data && data.Events) {
-            setEvent(data.Events);
-          }
+          const currentDate = new Date();
+          const sortedEvents = data.Events.sort((a, b) => {
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+
+            if (dateA < currentDate && dateB < currentDate) {
+              return dateA - dateB;
+            } else if (dateA < currentDate) {
+              return 1; // Move event A to the bottom
+            } else if (dateB < currentDate) {
+              return -1; // Move event B to the bottom
+            } else {
+              return dateA - dateB;
+            }
+          });
+          setEvent(sortedEvents);
         } else {
           throw new Error("Failed to fetch events data");
         }
@@ -123,29 +136,40 @@ function GroupInfo() {
           {event &&
             event
               .filter((event) => event.groupId === group.id)
-              .map((event) => (
-                <a
-                  className="event-card"
-                  href={"/events/" + event.id}
-                  key={event.id}
-                >
-                  <div className="top-event-card">
-                    <div className="left">
-                      <img src={event.previewImage} alt="Event Preview"></img>
+              .map((event) => {
+                const startDate = new Date(event.startDate);
+                const formattedDate = startDate.toISOString().split("T")[0];
+                const formattedTime = startDate.toTimeString().split(" ")[0];
+                return (
+                  <a
+                    className="event-card"
+                    href={"/events/" + event.id}
+                    key={event.id}
+                  >
+                    <div className="top-event-card">
+                      <div className="left">
+                        {event.previewImage ? (
+                          <img src={event.previewImage} alt="Group Preview" />
+                        ) : (
+                          <h3 className="no-preview">No Preview Img!</h3>
+                        )}
+                      </div>
+                      <div className="right">
+                        <h4>
+                          {formattedDate} · {formattedTime}
+                        </h4>
+                        <h3>{event.name}</h3>
+                        <p>
+                          {event.Venue.city}, {event.Venue.state}
+                        </p>
+                      </div>
                     </div>
-                    <div className="right">
-                      <h4>{event.startDate}</h4>
-                      <h3>{event.name}</h3>
-                      <p>
-                        {event.Venue.city}, {event.Venue.state}
-                      </p>
+                    <div className="lower-event-card">
+                      <p className="event-description">{event.description}</p>
                     </div>
-                  </div>
-                  <div className="lower-event-card">
-                    <p className="event-description">{event.description}</p>
-                  </div>
-                </a>
-              ))}
+                  </a>
+                );
+              })}
         </div>
       </div>
     </>
