@@ -10,11 +10,11 @@ function CreateGroup() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
   const sessionGroup = useSelector((state) => state.session.group);
-  const [name, setName] = useState("");
   const history = useHistory();
+  const [name, setName] = useState("");
   const [about, setAbout] = useState("");
   const [type, setType] = useState("");
-  const [isPrivate, setIsPrivate] = useState("");
+  const [isPrivate, setIsPrivate] = useState(false);
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [url, setUrl] = useState("");
@@ -22,48 +22,28 @@ function CreateGroup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (sessionUser) {
-      setErrors({});
-      dispatch(
-        createGroup({
-          organizerId: sessionUser.id,
-          name,
-          about,
-          type,
-          isPrivate,
-          city,
-          state,
-        })
-      )
-        .then((createGroupResponse) => {
-          if (createGroupResponse) {
-            const { group } = createGroupResponse.payload;
-
-            dispatch(addGroupImage(group.id, url, true))
-              .then((addedImageResponse) => {
-                if (addedImageResponse) {
-                  // Handle success
-                  history.push(`/groups/${group.id}`);
-                } else {
-                  throw new Error("Failed to add group image.");
-                }
-              })
-              .catch((error) => {
-                // Handle error
-                console.log(error);
-                setErrors({
-                  submit: "An error occurred. Please try again later.",
-                });
-              });
-          } else {
-            throw new Error("Failed to create group.");
-          }
-        })
-        .catch((error) => {
-          // Handle error
-          console.log(error);
-          setErrors({ submit: "An error occurred. Please try again later." });
-        });
+    const groupPayload = {
+      organizerId: sessionUser.id,
+      name,
+      about,
+      type,
+      private: isPrivate === "1",
+      city,
+      state,
+    };
+    const newGroup = await dispatch(createGroup(groupPayload));
+    console.log(newGroup);
+    if (newGroup) {
+      const imagePayload = {
+        groupId: newGroup.group.id,
+        url,
+        preview: true,
+      };
+      const newImage = await dispatch(addGroupImage(imagePayload));
+      console.log("newImage", newImage);
+      console.log("newGroup", newGroup);
+      console.log("id", newGroup.group.id);
+      //history.push(`/groups/${newGroup.id}`);
     }
   };
   return (
@@ -137,11 +117,11 @@ function CreateGroup() {
           <label htmlFor="privacyType">Is this group private or public?</label>
           <select
             id="privacyType"
-            value={isPrivate} //
-            onChange={(e) => setIsPrivate(e.target.value)}
+            value={isPrivate ? "1" : "0"} //
+            onChange={(e) => setIsPrivate(e.target.value === "1")}
           >
-            <option value="true">Private</option>
-            <option value="">Public</option>
+            <option value="1">Private</option>
+            <option value="0">Public</option>
           </select>
           {errors.private && <p className="error">{errors.private}</p>}
           <input

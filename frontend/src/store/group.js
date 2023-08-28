@@ -15,35 +15,36 @@ const removeGroup = () => {
     type: DELETE_GROUP,
   };
 };
-const setImg = (groupId, url, preview) => {
+const setImg = (img) => {
   return {
     type: SET_IMAGE,
-    payload: { groupId, url, preview },
+    payload: img,
   };
 };
 
-export const createGroup = (group) => async (dispatch) => {
-  const { city, state, name, about, type, private: isPrivate } = group;
+export const createGroup = (groupInfo) => async (dispatch) => {
   try {
     const response = await csrfFetch("/api/groups", {
       method: "POST",
-      body: JSON.stringify({
-        name,
-        about,
-        type,
-        private: !!isPrivate,
-        city,
-        state,
-      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(groupInfo),
     });
     if (response.ok) {
-      dispatch(createGroup());
-      return true;
+      const newGroup = await response.json();
+      //console.log("response", response.json());
+      console.log("newGroup", newGroup);
+      dispatch(setGroup(newGroup));
+      return newGroup;
     } else {
       const data = await response.json();
       return false;
     }
   } catch (error) {
+    console.log("json response", JSON.stringify(groupInfo));
+    console.log("error:", error);
+    console.log("payload:", groupInfo);
     return false;
   }
 };
@@ -58,6 +59,7 @@ export const deleteGroup = (groupId) => async (dispatch) => {
       return true;
     } else {
       const data = await response.json();
+      console.log("error");
       return false;
     }
   } catch (error) {
@@ -65,23 +67,28 @@ export const deleteGroup = (groupId) => async (dispatch) => {
   }
 };
 
-export const addGroupImage = (groupId, url, preview) => async (dispatch) => {
+export const addGroupImage = (imgPayload) => async (dispatch) => {
   try {
-    const response = await csrfFetch(`/api/groups/${groupId}/images`, {
-      method: "POST",
-      body: JSON.stringify({
-        url,
-        preview,
-      }),
-    });
+    const response = await csrfFetch(
+      `/api/groups/${imgPayload.groupId}/images`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(imgPayload),
+      }
+    );
     if (response.ok) {
-      dispatch(addGroupImage());
-      return true;
+      const newImage = await response.json();
+      dispatch(setImg(newImage));
+      return newImage;
     } else {
       const data = await response.json();
       return false;
     }
   } catch (error) {
+    console.log("imgPayload", imgPayload);
     return false;
   }
 };

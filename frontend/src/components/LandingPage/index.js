@@ -36,10 +36,7 @@ function LandingPage() {
     <div className="landing-page">
       <div className="section1">
         <div className="left">
-          <h1>
-            A people platform -- meet new people with similar hobbies and
-            interests
-          </h1>
+          <h1>The people platform— Where interests become friendships</h1>
           <p>
             Whatever your interest, from hiking and reading to networking and
             skill sharing, there are thousands of people who share it on Meetup.
