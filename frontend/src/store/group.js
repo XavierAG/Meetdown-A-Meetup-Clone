@@ -65,7 +65,7 @@ export const deleteGroup = (groupId) => async (dispatch) => {
   } catch (error) {
     return false;
   }
-};
+}; //ok
 
 export const addGroupImage = (imgPayload) => async (dispatch) => {
   try {
