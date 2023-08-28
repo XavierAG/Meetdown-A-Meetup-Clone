@@ -4,9 +4,9 @@
   "description": "`<insert database schema design here>`",
   "main": "index.js",
   "dependencies": {
+    "aws-sdk": "^2.1446.0",
     "bcryptjs": "^2.4.3"
   },
-  "devDependencies": {},
   "scripts": {
     "render-postbuild": "npm run build --prefix frontend",
     "install": "npm --prefix backend install backend && npm --prefix frontend install frontend",
