@@ -40,10 +40,7 @@ function CreateGroup() {
         preview: true,
       };
       const newImage = await dispatch(addGroupImage(imagePayload));
-      console.log("newImage", newImage);
-      console.log("newGroup", newGroup);
-      console.log("id", newGroup.group.id);
-      //history.push(`/groups/${newGroup.id}`);
+      history.push(`/groups/${newGroup.group.id}`);
     }
   };
   return (
