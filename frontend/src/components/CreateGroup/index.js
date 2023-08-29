@@ -5,6 +5,7 @@ import { createGroup } from "../../store/group";
 import { addGroupImage } from "../../store/group";
 import "./CreateGroup.css";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
+import ImageUpload from "../ImageUpload";
 
 function CreateGroup() {
   const dispatch = useDispatch();
@@ -40,10 +41,7 @@ function CreateGroup() {
         preview: true,
       };
       const newImage = await dispatch(addGroupImage(imagePayload));
-      console.log("newImage", newImage);
-      console.log("newGroup", newGroup);
-      console.log("id", newGroup.group.id);
-      //history.push(`/groups/${newGroup.id}`);
+      history.push(`/groups/${newGroup.group.id}`);
     }
   };
   return (
@@ -124,6 +122,7 @@ function CreateGroup() {
             <option value="0">Public</option>
           </select>
           {errors.private && <p className="error">{errors.private}</p>}
+          {/* <ImageUpload setUrl={setUrl} /> */}
           <input
             type="text"
             value={url}

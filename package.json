@@ -4,9 +4,13 @@
   "description": "`<insert database schema design here>`",
   "main": "index.js",
   "dependencies": {
-    "bcryptjs": "^2.4.3"
+    "aws-sdk": "^2.1446.0",
+    "bcryptjs": "^2.4.3",
+    "react-dropzone": "^14.2.3",
+    "react-redux": "^8.1.2",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2"
   },
-  "devDependencies": {},
   "scripts": {
     "render-postbuild": "npm run build --prefix frontend",
     "install": "npm --prefix backend install backend && npm --prefix frontend install frontend",
