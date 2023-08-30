@@ -5,11 +5,15 @@
   "main": "index.js",
   "dependencies": {
     "aws-sdk": "^2.1446.0",
+<<<<<<< HEAD
     "bcryptjs": "^2.4.3",
     "react-dropzone": "^14.2.3",
     "react-redux": "^8.1.2",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2"
+=======
+    "bcryptjs": "^2.4.3"
+>>>>>>> main
   },
   "scripts": {
     "render-postbuild": "npm run build --prefix frontend",

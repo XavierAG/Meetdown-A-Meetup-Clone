@@ -33,8 +33,6 @@ export const createGroup = (groupInfo) => async (dispatch) => {
     });
     if (response.ok) {
       const newGroup = await response.json();
-      //console.log("response", response.json());
-      console.log("newGroup", newGroup);
       dispatch(setGroup(newGroup));
       return newGroup;
     } else {
@@ -42,9 +40,6 @@ export const createGroup = (groupInfo) => async (dispatch) => {
       return false;
     }
   } catch (error) {
-    console.log("json response", JSON.stringify(groupInfo));
-    console.log("error:", error);
-    console.log("payload:", groupInfo);
     return false;
   }
 };
@@ -65,7 +60,7 @@ export const deleteGroup = (groupId) => async (dispatch) => {
   } catch (error) {
     return false;
   }
-};
+}; //ok
 
 export const addGroupImage = (imgPayload) => async (dispatch) => {
   try {
