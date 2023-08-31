@@ -4,7 +4,6 @@ import { useHistory } from "react-router-dom";
 import { addGroupImage } from "../../store/group";
 import "./UpdateGroup.css";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
-import ImageUpload from "../ImageUpload";
 import { editGroup } from "../../store/group";
 
 function UpdateGroup() {
