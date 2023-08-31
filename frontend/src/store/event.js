@@ -1,18 +1,33 @@
 import { csrfFetch } from "./csrf";
 
-const SET_EVENT = "session/setevent";
-const DELETE_EVENT = "session/deleteevent";
+const SET_EVENT = "event/setEvent";
+const DELETE_EVENT = "event/deleteEvent";
 
-const setevent = (event) => {
+const setEvent = (event) => {
   return {
     type: SET_EVENT,
     payload: event,
   };
 };
-const removeevent = () => {
+const removeEvent = () => {
   return {
     type: DELETE_EVENT,
   };
+};
+
+export const fetchEvent = (eventId) => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/events/${eventId}`);
+    if (response.ok) {
+      const eventDetails = await response.json();
+      console.log("help", eventDetails.Events[0]);
+      dispatch(setEvent(eventDetails.Events[0]));
+    } else {
+      throw new Error("Failed to fetch event data");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const createEvent = (event) => async (dispatch) => {
@@ -29,7 +44,7 @@ export const createEvent = (event) => async (dispatch) => {
     }),
   });
   const data = await response.json();
-  dispatch(setevent(data.event));
+  dispatch(setEvent(data.event));
   return response;
 };
 
@@ -39,7 +54,7 @@ export const deleteEvent = (eventId) => async (dispatch) => {
       method: "DELETE",
     });
     if (response.ok) {
-      dispatch(removeevent());
+      dispatch(removeEvent());
       return true;
     } else {
       const data = await response.json();
@@ -58,6 +73,7 @@ const eventReducer = (state = initialState, action) => {
     case SET_EVENT:
       newState = Object.assign({}, state);
       newState.event = action.payload;
+      console.log(newState);
       return newState;
     case DELETE_EVENT:
       newState = Object.assign({}, state);

@@ -489,11 +489,9 @@ router.put("/:eventId/attendance", requireAuth, async (req, res) => {
     });
 
     if (!attendance) {
-      return res
-        .status(404)
-        .json({
-          message: "Attendance between the user and the event does not exist",
-        });
+      return res.status(404).json({
+        message: "Attendance between the user and the event does not exist",
+      });
     }
 
     attendance.status = status;
@@ -537,11 +535,9 @@ router.delete("/:eventId/attendance", requireAuth, async (req, res) => {
     });
 
     if (!isOrganizer && userId !== req.user.id) {
-      return res
-        .status(403)
-        .json({
-          message: "Only the User or organizer may delete an Attendance",
-        });
+      return res.status(403).json({
+        message: "Only the User or organizer may delete an Attendance",
+      });
     }
 
     await attendance.destroy();

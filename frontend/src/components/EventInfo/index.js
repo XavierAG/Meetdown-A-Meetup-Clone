@@ -1,77 +1,90 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import "./EventInfo.css";
+import OpenModalButton from "../OpenModalButton";
+import DeleteModal from "../DeleteModal";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { fetchEvent } from "../../store/event";
+import { fetchGroup } from "../../store/group";
 
 function EventInfo() {
   const { eventId } = useParams();
-  const [event, setEvent] = useState([]);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const currentUser = useSelector((state) => state.session.user);
+  const event = useSelector((state) => state.event.event);
+  const group = useSelector((state) => state.group.group);
+  console.log("Event from Redux Store:", event);
 
   useEffect(() => {
-    const fetchEvent = async () => {
-      try {
-        const response = await fetch(`/api/events/${eventId}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.Event) {
-            setEvent(data.Event);
-          }
-        } else {
-          throw new Error("Failed to fetch event data");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchEvent();
-  }, [eventId]);
+    dispatch(fetchEvent(eventId));
+  }, [dispatch, eventId]);
 
-  if (!event) {
+  useEffect(() => {
+    if (event) {
+      dispatch(fetchGroup(event.groupId));
+    }
+  }, [dispatch, event]);
+
+  if (!event || !group) {
     return <div>Loading...</div>;
   }
 
   return (
-    <div className="event-info">
-      <div className="breadcrumb">
-        &lt;<a href="/events">Events</a>
+    <div className="event-details">
+      <div className="upper-event">
+        <div className="breadcrumb">
+          &lt;<a href="/events">Events</a>
+        </div>
+        <div>
+          <h1>{event.name}</h1>
+        </div>
+        <div>
+          <p>
+            Hosted by {group.Organizer.firstName} {group.Organizer.lastName}
+          </p>
+        </div>
       </div>
-      <div className="event-details">
-        <h1>{event.name}</h1>
-        <p>Hosted by: </p>
-        <img src={event.url} alt="Event Image" />
-        <div className="event-info-box">
-          <div className="start-end-time">
-            <span className="icon">Clock</span>
-            <span>{event.startDate}</span>
+      <div className="middle-event">
+        <div className="left-event">
+          <img src={event.EventImages[0].url} alt="Event Preview"></img>
+        </div>
+        <div className="right-event">
+          <a
+            className="group-of-event"
+            onClick={() => history.push(`/groups/${group.id}`)}
+          >
+            <div className="group-info-box">
+              <div className="left">
+                <img src={group.GroupImages[0].url} alt="Group Preview" />
+              </div>
+              <div className="right">
+                <p className="group-name-p">{event.Group.name}</p>
+                <p className="gray">{group.private ? "Private" : "Public"}</p>
+              </div>
+            </div>
+          </a>
+          <div className="event-info-box">
+            <div className="start-end-time">
+              <span className="icon">Clock</span>
+              <span>{event.startDate}</span>
 
-            <span>{event.endDate}</span>
+              <span>{event.endDate}</span>
+            </div>
+            <div className="price">
+              <span className="icon">Money</span>
+              <span>{event.price === 0 ? "FREE" : `$${event.price}`}</span>
+            </div>
+            <div className="location">
+              <span className="icon">Map Pin{event.type}</span>
+            </div>
           </div>
-          <div className="price">
-            <span className="icon">Money</span>
-            <span>{event.price === 0 ? "FREE" : `$${event.price}`}</span>
-          </div>
-          <div className="location">
-            <span className="icon">Map Pin</span>
-            <span>
-              {event.city} {event.state}
-            </span>
-          </div>
-          <h2>Description</h2>
-          <p>{event.description}</p>
         </div>
-        <div className="group-info-box">
-          <h2>Group Info</h2>
-          <p>Group: {event.name}</p>
-          <p>Location: {event.location}</p>
-          <p>Description: {event.about}</p>
-        </div>
-        {currentUser && currentUser.id === event.userId && (
-          <div className="event-actions">
-            <button className="update-button">Update</button>
-            <button className="delete-button">Delete</button>
-          </div>
-        )}
+      </div>
+      <div className="bottom-event">
+        <h2>Details</h2>
+        <p>{event.description}</p>
       </div>
     </div>
   );
