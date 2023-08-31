@@ -80,7 +80,11 @@ function ListEvent() {
             <div key={event.id} className="event-cards">
               <div className="top-event-card">
                 <div className="left">
-                  <img src={event.previewImage} alt="Event Preview"></img>
+                  {event.previewImage ? (
+                    <img src={event.previewImage} alt="Event Preview" />
+                  ) : (
+                    <h3>No Preview Img!</h3>
+                  )}
                 </div>
                 <div className="right">
                   <h4>

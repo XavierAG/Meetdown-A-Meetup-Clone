@@ -1,0 +1,37 @@
+.update-group-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1020px;
+    margin: 50px auto;
+}
+.update-group-page .form {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 5px auto;
+}
+
+.update-group-page .form .section {
+    border-top: 1px gray solid;
+    margin-bottom: 10px;
+    width: 1020px;
+}
+
+.update-group-page h3{
+    margin: 5px 0px;
+    color: teal
+}
+.update-group-page h3, h2{
+    margin: 10px 0px
+}
+.p-update {
+    color: black;
+}
+.update-group-button {
+    background-color: red;
+    margin-top: 10px;
+}
+.update-group-page .form .section select {
+    margin-bottom: 8px;
+}

@@ -1,36 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "./GroupInfo.css";
 import OpenModalButton from "../OpenModalButton";
 import DeleteModal from "../DeleteModal";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { fetchGroup } from "../../store/group";
 
 function GroupInfo() {
   const { groupId } = useParams();
-  const [group, setGroup] = useState(null);
   const [event, setEvent] = useState([]);
+  const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.session.user);
+  const group = useSelector((state) => state.group.group);
   const history = useHistory();
 
   useEffect(() => {
-    const fetchGroup = async () => {
-      try {
-        const response = await fetch(`/api/groups/${groupId}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data && data.Groups && data.Groups.length > 0) {
-            setGroup(data.Groups[0]);
-          }
-        } else {
-          throw new Error("Failed to fetch group data");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchGroup();
-  }, [groupId]);
+    dispatch(fetchGroup(groupId));
+  }, [dispatch, groupId]);
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -69,7 +56,7 @@ function GroupInfo() {
         <button onClick={() => history.push(`/groups/${groupId}/events/new`)}>
           Create Event
         </button>
-        <button onClick={() => history.push(`/groups/${groupId}/edit`)}>
+        <button onClick={() => history.push(`/groups/${groupId}/update-group`)}>
           Update
         </button>
         <OpenModalButton

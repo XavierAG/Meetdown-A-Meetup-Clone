@@ -1,8 +1,9 @@
 import { csrfFetch } from "./csrf";
 
-const SET_GROUP = "session/setGroup";
-const DELETE_GROUP = "session/removeGroup";
-const SET_IMAGE = "session/setImg";
+const SET_GROUP = "group/setGroup";
+const DELETE_GROUP = "group/removeGroup";
+const SET_IMAGE = "group/setImg";
+const UPDATE_GROUP = "group/updateGroup";
 
 const setGroup = (group) => {
   return {
@@ -20,6 +21,20 @@ const setImg = (img) => {
     type: SET_IMAGE,
     payload: img,
   };
+};
+
+export const fetchGroup = (groupId) => async (dispatch) => {
+  try {
+    const response = await fetch(`/api/groups/${groupId}`);
+    if (response.ok) {
+      const groupDetails = await response.json();
+      dispatch(setGroup(groupDetails.Groups[0]));
+    } else {
+      throw new Error("Failed to fetch group data");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const createGroup = (groupInfo) => async (dispatch) => {
@@ -93,6 +108,29 @@ export const addGroupImage = (imgPayload) => async (dispatch) => {
   }
 };
 
+export const editGroup = (groupId, payload) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/groups/${groupId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      const updatedGroup = await response.json();
+      dispatch(setGroup(updatedGroup));
+      return updatedGroup;
+    } else {
+      const data = await response.json();
+      return false;
+    }
+  } catch (error) {
+    console.log("update error:", error);
+    return false;
+  }
+};
+
 const initialState = { group: null, image: null };
 
 const groupReducer = (state = initialState, action) => {
@@ -109,6 +147,9 @@ const groupReducer = (state = initialState, action) => {
     case SET_IMAGE:
       newState = Object.assign({}, state);
       newState.image = action.payload;
+      return newState;
+    case UPDATE_GROUP:
+      newState = { ...state, group: action.payload };
       return newState;
     default:
       return state;
