@@ -21,6 +21,44 @@ function CreateGroup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const validationErrors = {};
+
+    // Validate name
+    if (!name.trim()) {
+      validationErrors.name = "Name is required";
+    }
+
+    // Validate about
+    if (about.length < 30) {
+      validationErrors.about = "About must be 30 characters or more";
+    }
+
+    // Validate type
+    if (type !== "In person" && type !== "Online") {
+      validationErrors.type = "Type must be 'Online' or 'In person'";
+    }
+
+    // Validate city
+    if (!city.trim()) {
+      validationErrors.city = "City is required";
+    }
+
+    // Validate state
+    if (!state.trim()) {
+      validationErrors.state = "State is required";
+    }
+
+    if (url.trim() && !isValidUrl(url)) {
+      validationErrors.url = "Invalid URL format";
+    }
+
+    // Check if there are any validation errors
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return; // Prevent API request if there are validation errors
+    }
+
     const groupPayload = {
       organizerId: sessionUser.id,
       name,
@@ -43,6 +81,13 @@ function CreateGroup() {
       }
     }
   };
+
+  function isValidUrl(url) {
+    const urlPattern =
+      /^(https?:\/\/)?([\w-]+(\.[\w-]+)+)([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/;
+    return urlPattern.test(url);
+  }
+
   return (
     <div className="create-group-page">
       <h3>Start a New Group</h3>
@@ -128,6 +173,7 @@ function CreateGroup() {
             placeholder="Image URL"
             required
           />
+          {errors.url && <p className="error">{errors.url}</p>}
         </div>
         <div className="section">
           <button className="create-group-button" type="submit">
