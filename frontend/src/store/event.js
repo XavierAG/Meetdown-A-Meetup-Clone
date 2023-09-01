@@ -73,7 +73,7 @@ export const deleteEvent = (eventId) => async (dispatch) => {
   }
 };
 
-const initialState = { allEvents: null, singleEvent: null };
+const initialState = { allEvents: {}, singleEvent: {} };
 
 const eventReducer = (state = initialState, action) => {
   let newState;

@@ -26,7 +26,7 @@ function EventInfo() {
     }
   }, [dispatch, event]);
 
-  if (!event || !group) {
+  if (Object.keys(event).length === 0 || Object.keys(group).length === 0) {
     return <div>Loading...</div>;
   }
 
