@@ -1,11 +1,18 @@
 import { csrfFetch } from "./csrf";
 
 const SET_EVENT = "event/setEvent";
+const SET_EVENTS = "event/setEvents";
 const DELETE_EVENT = "event/deleteEvent";
 
 const setEvent = (event) => {
   return {
     type: SET_EVENT,
+    payload: event,
+  };
+};
+const setEvents = (event) => {
+  return {
+    type: SET_EVENTS,
     payload: event,
   };
 };
@@ -30,22 +37,23 @@ export const fetchEvent = (eventId) => async (dispatch) => {
   }
 };
 
-export const createEvent = (event) => async (dispatch) => {
-  const { city, state, name, about, type, private: isPrivate } = event;
-  const response = await csrfFetch("/api/events", {
-    method: "POST",
-    body: JSON.stringify({
-      name,
-      about,
-      type,
-      private: !!isPrivate,
-      city,
-      state,
-    }),
-  });
-  const data = await response.json();
-  dispatch(setEvent(data.event));
-  return response;
+export const createEvent = (groupId, event) => async (dispatch) => {
+  try {
+    const response = await csrfFetch(`/api/groups/${groupId}/events`, {
+      method: "POST",
+      body: JSON.stringify(event),
+    });
+    if (response.ok) {
+      const newEvent = await response.json();
+      dispatch(setEvent(newEvent));
+      return newEvent;
+    } else {
+      const data = await response.json();
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
 };
 
 export const deleteEvent = (eventId) => async (dispatch) => {
@@ -65,15 +73,16 @@ export const deleteEvent = (eventId) => async (dispatch) => {
   }
 };
 
-const initialState = { event: null };
+const initialState = { allEvents: null, singleEvent: null };
 
 const eventReducer = (state = initialState, action) => {
   let newState;
   switch (action.type) {
     case SET_EVENT:
-      newState = Object.assign({}, state);
-      newState.event = action.payload;
-      console.log(newState);
+      newState = { ...state, singleEvent: action.payload };
+      return newState;
+    case SET_EVENTS:
+      newState = { ...state, allEvents: action.payload };
       return newState;
     case DELETE_EVENT:
       newState = Object.assign({}, state);

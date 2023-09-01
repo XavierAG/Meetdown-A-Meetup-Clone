@@ -13,9 +13,8 @@ function EventInfo() {
   const dispatch = useDispatch();
   const history = useHistory();
   const currentUser = useSelector((state) => state.session.user);
-  const event = useSelector((state) => state.event.event);
-  const group = useSelector((state) => state.group.group);
-  console.log("Event from Redux Store:", event);
+  const event = useSelector((state) => state.event.singleEvent);
+  const group = useSelector((state) => state.group.singleGroup);
 
   useEffect(() => {
     dispatch(fetchEvent(eventId));
@@ -29,6 +28,20 @@ function EventInfo() {
 
   if (!event || !group) {
     return <div>Loading...</div>;
+  }
+
+  let groupButtons;
+  if (currentUser?.id === group?.Organizer.id) {
+    groupButtons = (
+      <div>
+        <OpenModalButton
+          buttonText="Delete"
+          modalComponent={
+            <DeleteModal deleteContext={{ type: "Event", eventId: eventId }} />
+          }
+        />
+      </div>
+    );
   }
 
   return (
@@ -80,6 +93,7 @@ function EventInfo() {
               <span className="icon">Map Pin{event.type}</span>
             </div>
           </div>
+          <div className="group-buttons">{groupButtons}</div>
         </div>
       </div>
       <div className="bottom-event">

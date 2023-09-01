@@ -9,7 +9,6 @@ import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 function CreateGroup() {
   const dispatch = useDispatch();
   const sessionUser = useSelector((state) => state.session.user);
-  const sessionGroup = useSelector((state) => state.session.group);
   const history = useHistory();
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
@@ -32,7 +31,6 @@ function CreateGroup() {
       state,
     };
     const newGroup = await dispatch(createGroup(groupPayload));
-    console.log(newGroup);
     if (newGroup) {
       const imagePayload = {
         groupId: newGroup.group.id,
@@ -40,7 +38,9 @@ function CreateGroup() {
         preview: true,
       };
       const newImage = await dispatch(addGroupImage(imagePayload));
-      history.push(`/groups/${newGroup.group.id}`);
+      if (newImage) {
+        history.push(`/groups/${newGroup.group.id}`);
+      }
     }
   };
   return (

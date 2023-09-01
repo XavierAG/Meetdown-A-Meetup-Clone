@@ -12,8 +12,9 @@ function GroupInfo() {
   const [event, setEvent] = useState([]);
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.session.user);
-  const group = useSelector((state) => state.group.group);
+  const group = useSelector((state) => state.group.singleGroup);
   const history = useHistory();
+  console.log("This is Group:", group);
 
   useEffect(() => {
     dispatch(fetchGroup(groupId));
@@ -75,7 +76,7 @@ function GroupInfo() {
     );
   }
 
-  if (!group) {
+  if (Object.keys(group).length === 0) {
     return <div>Loading...</div>;
   }
 
