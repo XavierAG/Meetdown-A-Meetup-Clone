@@ -26,12 +26,12 @@ module.exports = {
         preview: false,
       },
       {
-        eventId: 2,
+        eventId: 4,
         url: "https://images.unsplash.com/photo-1564399580075-5dfe19c205f3?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&dl=artur-matosyan-4YWUMaftmag-unsplash.jpg",
         preview: true,
       },
       {
-        eventId: 1,
+        eventId: 5,
         url: "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&q=85&fm=jpg&crop=entropy&cs=srgb&dl=desola-lanre-ologun-IgUR1iX0mqM-unsplash.jpg",
         preview: true,
       },

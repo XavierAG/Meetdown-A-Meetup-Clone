@@ -32,10 +32,20 @@ function UpdateGroup() {
       city,
       state,
     };
-    const editedGroup = await dispatch(editGroup(groupId, payload));
-    console.log("editedGroup", editedGroup);
-    if (editedGroup) {
-      history.push(`/groups/${editedGroup.id}`);
+    try {
+      const response = await dispatch(editGroup(groupId, payload));
+      if (response) {
+        const editedGroup = response;
+        if (editedGroup.errors) {
+          setErrors(editedGroup.errors);
+          return;
+        }
+        if (editedGroup) {
+          history.push(`/groups/${editedGroup.id}`);
+        }
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
   };
   useEffect(() => {

@@ -60,14 +60,13 @@ export const createGroup = (groupInfo) => async (dispatch) => {
     });
     if (response.ok) {
       const newGroup = await response.json();
+      console.log("HUH");
       dispatch(setGroups(newGroup));
       return newGroup;
-    } else {
-      const data = await response.json();
-      return false;
     }
   } catch (error) {
-    return false;
+    const data = await error.json();
+    return data;
   }
 };
 
@@ -133,8 +132,8 @@ export const editGroup = (groupId, payload) => async (dispatch) => {
       return false;
     }
   } catch (error) {
-    console.log("update error:", error);
-    return false;
+    const data = await error.json();
+    return data;
   }
 };
 

@@ -21,42 +21,15 @@ function CreateGroup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const validationErrors = {};
-
-    // Validate name
-    if (!name.trim()) {
-      validationErrors.name = "Name is required";
-    }
-
-    // Validate about
-    if (about.length < 30) {
-      validationErrors.about = "About must be 30 characters or more";
-    }
-
-    // Validate type
-    if (type !== "In person" && type !== "Online") {
-      validationErrors.type = "Type must be 'Online' or 'In person'";
-    }
-
-    // Validate city
-    if (!city.trim()) {
-      validationErrors.city = "City is required";
-    }
-
-    // Validate state
-    if (!state.trim()) {
-      validationErrors.state = "State is required";
-    }
 
     if (url.trim() && !isValidUrl(url)) {
       validationErrors.url = "Invalid URL format";
     }
 
-    // Check if there are any validation errors
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
-      return; // Prevent API request if there are validation errors
+      return;
     }
 
     const groupPayload = {
@@ -68,18 +41,41 @@ function CreateGroup() {
       city,
       state,
     };
-    const newGroup = await dispatch(createGroup(groupPayload));
-    if (newGroup) {
-      const imagePayload = {
-        groupId: newGroup.group.id,
-        url,
-        preview: true,
-      };
-      const newImage = await dispatch(addGroupImage(imagePayload));
-      if (newImage) {
-        history.push(`/groups/${newGroup.group.id}`);
+    try {
+      const response = await dispatch(createGroup(groupPayload));
+
+      if (response) {
+        const newGroup = response;
+        if (newGroup.errors) {
+          setErrors(newGroup.errors);
+          return;
+        }
+        if (newGroup) {
+          const imagePayload = {
+            groupId: newGroup.group.id,
+            url,
+            preview: true,
+          };
+          const newImage = await dispatch(addGroupImage(imagePayload));
+          if (newImage) {
+            history.push(`/groups/${newGroup.group.id}`);
+          }
+        }
       }
+    } catch (error) {
+      console.error("An error occurred:", error);
     }
+    // if (newGroup) {
+    //   const imagePayload = {
+    //     groupId: newGroup.group.id,
+    //     url,
+    //     preview: true,
+    //   };
+    //   const newImage = await dispatch(addGroupImage(imagePayload));
+    //   if (newImage) {
+    //     history.push(`/groups/${newGroup.group.id}`);
+    //   }
+    // }
   };
 
   function isValidUrl(url) {
