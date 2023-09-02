@@ -47,12 +47,10 @@ export const createEvent = (groupId, event) => async (dispatch) => {
       const newEvent = await response.json();
       dispatch(setEvent(newEvent));
       return newEvent;
-    } else {
-      const data = await response.json();
-      return false;
     }
   } catch (error) {
-    return false;
+    const data = error.json();
+    return data;
   }
 };
 
