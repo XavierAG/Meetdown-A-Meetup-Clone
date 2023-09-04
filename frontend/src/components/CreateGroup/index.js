@@ -121,10 +121,15 @@ function CreateGroup() {
           <h2>Describe the purpose of your group.</h2>
           <p className="p-create">
             People will see this when we promote your group, but you'll be able
-            to add to it later, too. 1. What's the purpose of the group? 2. Who
-            should join? 3. What will you do at your events?
+            to add to it later, too.
+            <br />
+            <br />
+            1. What's the purpose of the group?
+            <br /> 2. Who should join?
+            <br /> 3. What will you do at your events?
           </p>
           <textarea
+            className="about-text-area"
             placeholder="Please write at least 30 characters"
             value={about}
             onChange={(e) => setAbout(e.target.value)}
@@ -133,7 +138,7 @@ function CreateGroup() {
         </div>
         <div className="section">
           <h2>Final steps...</h2>
-          <label htmlFor="select">Is this an in-person or online group?</label>
+          <p className="p-create">Is this an in-person or online group?</p>
           <select
             id="locationType"
             value={type}
@@ -144,7 +149,7 @@ function CreateGroup() {
             <option value="Online">Online</option>
           </select>
           {errors.type && <p className="error">{errors.type}</p>}
-          <label htmlFor="privacyType">Is this group private or public?</label>
+          <p className="p-create">Is this group private or public?</p>
           <select
             id="privacyType"
             value={isPrivate ? "1" : "0"} //
@@ -154,6 +159,9 @@ function CreateGroup() {
             <option value="0">Public</option>
           </select>
           {errors.private && <p className="error">{errors.private}</p>}
+          <p className="p-create">
+            Please add in image url for your groub below:
+          </p>
           <input
             type="text"
             value={url}

@@ -133,7 +133,7 @@ function CreateEvent() {
       </div>
       {errors.price && <p className="error">{errors.price}</p>}
       <div>
-        <label>Please describe your event</label>
+        <p className="p-create">Please describe your event</p>
         <textarea
           placeholder="Please write at least 30 characters"
           value={description}

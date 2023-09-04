@@ -35,3 +35,9 @@
 .create-group-page .form .section select {
     margin-bottom: 8px;
 }
+
+.about-text-area {
+   width: 450px;
+   height: 150px;
+   resize: none;
+}
