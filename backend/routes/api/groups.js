@@ -28,7 +28,7 @@ const validateSignup = [
   check("about")
     .exists({ checkFalsy: true })
     .isLength({ min: 30 })
-    .withMessage("About must be 30 characters or more"),
+    .withMessage("About must be at least 30 characters"),
   check("type")
     .exists({ checkFalsy: true })
     .isIn(["Online", "In person"])
@@ -74,7 +74,8 @@ const validateEventSignup = [
     .withMessage("Price is invalid"),
   check("description")
     .exists({ checkFalsy: true })
-    .withMessage("Description is required"),
+    .isLength({ min: 30 })
+    .withMessage("Description must be at least 30 characters"),
   check("startDate")
     .exists({ checkFalsy: true })
     .isAfter()
@@ -350,7 +351,8 @@ router.put("/:groupId", requireAuth, validateSignup, async (req, res) => {
     await group.save();
 
     res.status(200).json(group);
-  } catch (e) {
+  } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -588,7 +590,7 @@ router.post(
       res.status(200).json({ event });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "Internal server error" });
+      res.status(500).json({ message: "Internal server error", error });
     }
   }
 );
@@ -768,7 +770,7 @@ router.put("/:groupId/membership", requireAuth, async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Internal server error", error });
   }
 });
 

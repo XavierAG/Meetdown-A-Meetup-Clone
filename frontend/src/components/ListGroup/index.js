@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import "./ListGroup.css";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { fetchAllGroups } from "../../store/group";
 
 function ListGroup() {
   const [activeLink, setActiveLink] = useState("");
-  const [groups, setGroups] = useState([]);
+  const dispatch = useDispatch();
+  const groups = useSelector((state) => state.group.allGroups);
   const history = useHistory();
 
   const handleLinkClick = (link) => {
@@ -13,22 +16,12 @@ function ListGroup() {
   };
 
   useEffect(() => {
-    const fetchGroups = async () => {
-      try {
-        const response = await fetch("/api/groups");
-        if (response.ok) {
-          const data = await response.json();
-          setGroups(data.Groups);
-        } else {
-          throw new Error("Failed to fetch group data");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    dispatch(fetchAllGroups());
+  }, [dispatch]);
 
-    fetchGroups();
-  }, []);
+  if (Object.keys(groups).length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="group-page">
@@ -53,7 +46,7 @@ function ListGroup() {
         </h1>
       </div>
       <h4>Groups in Meetdown</h4>
-      {groups.map((group) => (
+      {groups.Groups.map((group) => (
         <a
           className="groups-listed"
           onClick={() => history.push(`/groups/${group.id}`)}

@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { createGroup } from "../../store/group";
 import { addGroupImage } from "../../store/group";
 import "./CreateGroup.css";
+import { createVenue } from "../../store/venue";
 import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 function CreateGroup() {
@@ -56,6 +57,8 @@ function CreateGroup() {
             url,
             preview: true,
           };
+          console.log(newGroup.group.id);
+          dispatch(createVenue(newGroup.group.id));
           const newImage = await dispatch(addGroupImage(imagePayload));
           if (newImage) {
             history.push(`/groups/${newGroup.group.id}`);
@@ -65,17 +68,6 @@ function CreateGroup() {
     } catch (error) {
       console.error("An error occurred:", error);
     }
-    // if (newGroup) {
-    //   const imagePayload = {
-    //     groupId: newGroup.group.id,
-    //     url,
-    //     preview: true,
-    //   };
-    //   const newImage = await dispatch(addGroupImage(imagePayload));
-    //   if (newImage) {
-    //     history.push(`/groups/${newGroup.group.id}`);
-    //   }
-    // }
   };
 
   function isValidUrl(url) {

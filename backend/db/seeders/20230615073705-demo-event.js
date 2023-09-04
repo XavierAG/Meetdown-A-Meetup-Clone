@@ -37,8 +37,8 @@ module.exports = {
           endDate: new Date("2023-06-18"),
         },
         {
-          venueId: 1,
-          groupId: 1,
+          venueId: 3,
+          groupId: 3,
           name: "Event 3",
           description: "Event 3 description",
           type: "Online",
@@ -49,8 +49,8 @@ module.exports = {
           endDate: new Date("2023-06-21"),
         },
         {
-          venueId: 3,
-          groupId: 3,
+          venueId: 4,
+          groupId: 4,
           name: "Event 4",
           description: "Event 4 description",
           type: "In person",
@@ -61,8 +61,8 @@ module.exports = {
           endDate: new Date("2023-06-23"),
         },
         {
-          venueId: 2,
-          groupId: 2,
+          venueId: 5,
+          groupId: 5,
           name: "Event 5",
           description: "Event 5 description",
           type: "Online",

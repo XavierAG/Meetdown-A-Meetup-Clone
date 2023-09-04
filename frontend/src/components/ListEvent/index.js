@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import "./ListEvent.css";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { fetchAllEvents } from "../../store/event";
 
 function ListEvent() {
   const [activeLink, setActiveLink] = useState("");
-  const [events, setEvents] = useState([]);
+  const [event, setEvent] = useState([]);
+  const dispatch = useDispatch();
+  const events = useSelector((state) => state.event.allEvents);
   const history = useHistory();
 
   const handleLinkClick = (link) => {
@@ -13,37 +17,33 @@ function ListEvent() {
   };
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch("/api/events");
-        if (response.ok) {
-          const data = await response.json();
-          const currentDate = new Date();
-          const sortedEvents = data.Events.sort((a, b) => {
-            const dateA = new Date(a.startDate);
-            const dateB = new Date(b.startDate);
+    dispatch(fetchAllEvents());
+  }, [dispatch]);
 
-            if (dateA < currentDate && dateB < currentDate) {
-              return dateA - dateB;
-            } else if (dateA < currentDate) {
-              return 1; // Move event A to the bottom
-            } else if (dateB < currentDate) {
-              return -1; // Move event B to the bottom
-            } else {
-              return dateA - dateB;
-            }
-          });
-          setEvents(sortedEvents);
+  useEffect(() => {
+    if (events && events.Events) {
+      const currentDate = new Date();
+      const sortedEvents = events.Events.sort((a, b) => {
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+
+        if (dateA < currentDate && dateB < currentDate) {
+          return dateA - dateB;
+        } else if (dateA < currentDate) {
+          return 1; // Move event A to the bottom
+        } else if (dateB < currentDate) {
+          return -1; // Move event B to the bottom
         } else {
-          throw new Error("Failed to fetch group data");
+          return dateA - dateB;
         }
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      });
+      setEvent(sortedEvents);
+    }
+  }, [events]);
 
-    fetchEvents();
-  }, []);
+  if (Object.keys(events).length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="event-page">
@@ -68,7 +68,7 @@ function ListEvent() {
         </h1>
       </div>
       <h4>Events in Meetdown</h4>
-      {events.map((event) => {
+      {event.map((event) => {
         const startDate = new Date(event.startDate);
         const formattedDate = startDate.toISOString().split("T")[0];
         const formattedTime = startDate.toTimeString().split(" ")[0];

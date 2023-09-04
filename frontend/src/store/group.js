@@ -38,9 +38,23 @@ export const fetchGroup = (groupId) => async (dispatch) => {
     const response = await fetch(`/api/groups/${groupId}`);
     if (response.ok) {
       const groupDetails = await response.json();
-      console.log("what", groupDetails[0]);
       dispatch(setGroup(groupDetails.Groups[0]));
       return groupDetails;
+    } else {
+      throw new Error("Failed to fetch group data");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchAllGroups = () => async (dispatch) => {
+  try {
+    const response = await fetch("/api/groups");
+    if (response.ok) {
+      const groups = await response.json();
+      dispatch(setGroups(groups));
+      return groups;
     } else {
       throw new Error("Failed to fetch group data");
     }
@@ -60,7 +74,6 @@ export const createGroup = (groupInfo) => async (dispatch) => {
     });
     if (response.ok) {
       const newGroup = await response.json();
-      console.log("HUH");
       dispatch(setGroups(newGroup));
       return newGroup;
     }

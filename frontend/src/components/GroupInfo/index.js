@@ -6,6 +6,7 @@ import OpenModalButton from "../OpenModalButton";
 import DeleteModal from "../DeleteModal";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { fetchGroup } from "../../store/group";
+import { fetchAllEvents } from "../../store/event";
 
 function GroupInfo() {
   const { groupId } = useParams();
@@ -13,43 +14,35 @@ function GroupInfo() {
   const dispatch = useDispatch();
   const currentUser = useSelector((state) => state.session.user);
   const group = useSelector((state) => state.group.singleGroup);
+  const events = useSelector((state) => state.event.allEvents);
   const history = useHistory();
-  console.log("This is Group:", group);
 
   useEffect(() => {
     dispatch(fetchGroup(groupId));
+    dispatch(fetchAllEvents());
   }, [dispatch, groupId]);
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch("/api/events");
-        if (response.ok) {
-          const data = await response.json();
-          const currentDate = new Date();
-          const sortedEvents = data.Events.sort((a, b) => {
-            const dateA = new Date(a.startDate);
-            const dateB = new Date(b.startDate);
 
-            if (dateA < currentDate && dateB < currentDate) {
-              return dateA - dateB;
-            } else if (dateA < currentDate) {
-              return 1; // Move event A to the bottom
-            } else if (dateB < currentDate) {
-              return -1; // Move event B to the bottom
-            } else {
-              return dateA - dateB;
-            }
-          });
-          setEvent(sortedEvents);
+  useEffect(() => {
+    if (events && events.Events) {
+      const currentDate = new Date();
+      const sortedEvents = events.Events.sort((a, b) => {
+        const dateA = new Date(a.startDate);
+        const dateB = new Date(b.startDate);
+
+        if (dateA < currentDate && dateB < currentDate) {
+          return dateA - dateB;
+        } else if (dateA < currentDate) {
+          return 1; // Move event A to the bottom
+        } else if (dateB < currentDate) {
+          return -1; // Move event B to the bottom
         } else {
-          throw new Error("Failed to fetch events data");
+          return dateA - dateB;
         }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchEvents();
-  }, []);
+      });
+      setEvent(sortedEvents);
+    }
+  }, [events]);
+
   let groupButtons;
   if (currentUser?.id === group?.organizerId) {
     groupButtons = (

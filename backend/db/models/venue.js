@@ -1,8 +1,6 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-const Group = require('./group');
+"use strict";
+const { Model } = require("sequelize");
+const Group = require("./group");
 module.exports = (sequelize, DataTypes) => {
   class Venue extends Model {
     /**
@@ -11,38 +9,44 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Venue.belongsTo(models.Group, { foreignKey: 'groupId'})
-      Venue.hasMany(models.Event, { foreignKey: 'venueId' , onDelete: 'CASCADE'});
+      Venue.belongsTo(models.Group, { foreignKey: "groupId" });
+      Venue.hasMany(models.Event, {
+        foreignKey: "venueId",
+        onDelete: "CASCADE",
+      });
     }
   }
-  Venue.init({
-    groupId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+  Venue.init(
+    {
+      groupId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      address: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      city: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      state: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lat: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+      },
+      lng: {
+        type: DataTypes.DECIMAL,
+        allowNull: false,
+      },
     },
-    address: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    city: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    lat: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
-    },
-    lng: {
-      type: DataTypes.DECIMAL,
-      allowNull: false,
+    {
+      sequelize,
+      modelName: "Venue",
     }
-  }, {
-    sequelize,
-    modelName: 'Venue',
-  });
+  );
   return Venue;
 };
