@@ -43,6 +43,12 @@ function EventInfo() {
       </div>
     );
   }
+  const sDate = new Date(event.startDate);
+  const eDate = new Date(event.startDate);
+  const formatSDate = sDate.toISOString().split("T")[0];
+  const formatSTime = sDate.toTimeString().split(" ")[0];
+  const formatEDate = eDate.toISOString().split("T")[0];
+  const formatETime = eDate.toTimeString().split(" ")[0];
 
   return (
     <div className="event-details">
@@ -79,21 +85,38 @@ function EventInfo() {
             </div>
           </a>
           <div className="event-info-box">
-            <div className="start-end-time">
-              <span className="icon">Clock</span>
-              <span>{event.startDate}</span>
-
-              <span>{event.endDate}</span>
+            <div className="event-info-content">
+              <span className="icon">
+                <i class="fa-regular fa-clock"></i>
+              </span>
+              <div className="event-times">
+                <span>
+                  {formatSDate} {" · "} {formatSTime}{" "}
+                </span>
+                <span>
+                  {formatEDate}
+                  {" · "} {formatETime}
+                </span>
+              </div>
             </div>
-            <div className="price">
-              <span className="icon">Money</span>
-              <span>{event.price === 0 ? "FREE" : `$${event.price}`}</span>
+            <div className="event-info-content between">
+              <div>
+                <span className="icon">
+                  <i class="fa-solid fa-dollar-sign"></i>
+                </span>
+                <span>{event.price === 0 ? "FREE" : `${event.price}`}</span>
+              </div>
             </div>
-            <div className="location">
-              <span className="icon">Map Pin{event.type}</span>
+            <div className="event-info-content between">
+              <div>
+                <span className="icon">
+                  <i class="fa-solid fa-map-pin"></i>
+                  {event.type}
+                </span>
+              </div>
+              <div className="group-buttons">{groupButtons}</div>
             </div>
           </div>
-          <div className="group-buttons">{groupButtons}</div>
         </div>
       </div>
       <div className="bottom-event">

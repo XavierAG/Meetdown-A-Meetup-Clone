@@ -64,6 +64,7 @@ const validateEventSignup = [
     .exists({ checkFalsy: true })
     .isIn(["Online", "In person"])
     .withMessage("Type must be Online or In person"),
+  check("private").isBoolean().withMessage("Private must be boolean"),
   check("capacity")
     .exists({ checkFalsy: true })
     .isInt()

@@ -14,7 +14,7 @@ function CreateGroup() {
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
   const [type, setType] = useState("");
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivate, setIsPrivate] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [url, setUrl] = useState("");
@@ -38,7 +38,7 @@ function CreateGroup() {
       name,
       about,
       type,
-      private: isPrivate === "1",
+      private: isPrivate,
       city,
       state,
     };
@@ -152,9 +152,10 @@ function CreateGroup() {
           <p className="p-create">Is this group private or public?</p>
           <select
             id="privacyType"
-            value={isPrivate ? "1" : "0"} //
-            onChange={(e) => setIsPrivate(e.target.value === "1")}
+            value={isPrivate} //
+            onChange={(e) => setIsPrivate(e.target.value)}
           >
+            <option value="">--Select--</option>
             <option value="1">Private</option>
             <option value="0">Public</option>
           </select>

@@ -13,7 +13,7 @@ function UpdateGroup() {
   const [name, setName] = useState("");
   const [about, setAbout] = useState("");
   const [type, setType] = useState("");
-  const [isPrivate, setIsPrivate] = useState(false);
+  const [isPrivate, setIsPrivate] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [url, setUrl] = useState("");
@@ -28,7 +28,7 @@ function UpdateGroup() {
       name,
       about,
       type,
-      private: isPrivate === "1",
+      private: isPrivate,
       city,
       state,
     };
@@ -60,7 +60,7 @@ function UpdateGroup() {
             setName(oldGroup.name);
             setAbout(oldGroup.about);
             setType(oldGroup.type);
-            setIsPrivate(oldGroup.private === 1);
+            setIsPrivate(oldGroup.private);
             setCity(oldGroup.city);
             setState(oldGroup.state);
           }
@@ -137,7 +137,6 @@ function UpdateGroup() {
             value={type}
             onChange={(e) => setType(e.target.value)}
           >
-            <option value="">--Select--</option>
             <option value="In person">In person</option>
             <option value="Online">Online</option>
           </select>
