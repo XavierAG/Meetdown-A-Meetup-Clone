@@ -33,15 +33,18 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       name: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(60),
         allowNull: false,
         validate: {
-          len: [5, Infinity],
+          len: [5, 60],
         },
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(500),
         allowNull: false,
+        validate: {
+          len: [30, 500],
+        },
       },
       type: {
         type: DataTypes.ENUM("Online", "In person"),

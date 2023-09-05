@@ -23,12 +23,12 @@ const router = express.Router();
 const validateSignup = [
   check("name")
     .exists({ checkFalsy: true })
-    .isLength({ max: 60 })
-    .withMessage("Name must be 60 characters or less"),
+    .isLength({ min: 5, max: 60 })
+    .withMessage("Name must be between 5 and 60 characters"),
   check("about")
     .exists({ checkFalsy: true })
-    .isLength({ min: 30 })
-    .withMessage("About must be at least 30 characters"),
+    .isLength({ min: 30, max: 500 })
+    .withMessage("About must be between 30 and 500 characters"),
   check("type")
     .exists({ checkFalsy: true })
     .isIn(["Online", "In person"])
@@ -58,8 +58,8 @@ const validateEventSignup = [
     .withMessage("Venue does not exist"),
   check("name")
     .exists({ checkFalsy: true })
-    .isLength({ min: 5 })
-    .withMessage("Name must be at least 5 characters"),
+    .isLength({ min: 5, max: 60 })
+    .withMessage("Name must be between 5 and 60 characters"),
   check("type")
     .exists({ checkFalsy: true })
     .isIn(["Online", "In person"])
@@ -75,8 +75,8 @@ const validateEventSignup = [
     .withMessage("Price is invalid"),
   check("description")
     .exists({ checkFalsy: true })
-    .isLength({ min: 30 })
-    .withMessage("Description must be at least 30 characters"),
+    .isLength({ min: 30, max: 500 })
+    .withMessage("Description must be between 30 and 500 characters"),
   check("startDate")
     .exists({ checkFalsy: true })
     .isAfter()
