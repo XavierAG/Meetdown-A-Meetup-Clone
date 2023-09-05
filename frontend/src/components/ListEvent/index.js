@@ -92,7 +92,8 @@ function ListEvent() {
                   </h4>
                   <h3>{event.name}</h3>
                   <p>
-                    {event.Venue.city}, {event.Venue.state}
+                    {event.Group.city}, {event.Group.state}
+                    {/* NEED TO CHANGE BACK TO VENUE  */}
                   </p>
                 </div>
               </div>
