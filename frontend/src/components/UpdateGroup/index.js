@@ -123,6 +123,7 @@ function UpdateGroup() {
             should join? 3. What will you do at your events?
           </p>
           <textarea
+            className="about-text-area"
             placeholder="Please write at least 30 characters"
             value={about}
             onChange={(e) => setAbout(e.target.value)}

@@ -35,3 +35,9 @@
 .update-group-page .form .section select {
     margin-bottom: 8px;
 }
+
+.update-group-page .about-text-area {
+    width: 450px;
+    height: 150px;
+    resize: none;
+}
