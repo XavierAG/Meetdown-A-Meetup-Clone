@@ -98,8 +98,8 @@ button .hidden {
     text-decoration: none;
     flex-direction: column;
     align-items: flex-start;
-    border: 1px solid rgb(186, 183, 183);
-    background-color: rgb(232, 232, 232);
+    border: 1px solid rgb(238, 235, 235);
+    background-color: rgb(238, 235, 235);
     border-radius: 20px;
     width: 600px;
     height: auto;
@@ -118,7 +118,7 @@ button .hidden {
     justify-content: center;
 }
 .top-event-card .left img {
-  max-width: 200px;
+  width: 220px;
   max-height: 150px;
 }
 .top-event-card .right {
@@ -149,4 +149,7 @@ button .hidden {
 }
 .no-preview {
     color: black;
+}
+.group-info-button {
+    margin-right: 10px;
 }

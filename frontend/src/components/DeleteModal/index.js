@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { useModal } from "../../context/Modal";
 import { deleteGroup } from "../../store/group";
 import { deleteEvent } from "../../store/event";
+import "./DeleteModal.css";
 
 function DeleteModal({ deleteContext }) {
   const { closeModal } = useModal();
@@ -33,9 +34,11 @@ function DeleteModal({ deleteContext }) {
     <>
       <h1>Confirm Delete</h1>
       <h3>{`Are you sure you want to delete this ${deleteContext.type}`}</h3>
-      <div>
+      <div className="delete-buttons">
         <button onClick={handleDelete}>Delete</button>
-        <button onClick={closeModal}>Cancel</button>
+        <button className="delete-cancel" onClick={closeModal}>
+          Cancel
+        </button>
       </div>
     </>
   );

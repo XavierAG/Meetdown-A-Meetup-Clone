@@ -19,7 +19,7 @@ function ListGroup() {
     dispatch(fetchAllGroups());
   }, [dispatch]);
 
-  if (Object.keys(groups).length === 0) {
+  if (!groups || Object.keys(groups).length === 0) {
     return <div>Loading...</div>;
   }
 

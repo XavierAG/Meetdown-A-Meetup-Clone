@@ -91,11 +91,17 @@ function EventInfo() {
               </span>
               <div className="event-times">
                 <span>
-                  {formatSDate} {" · "} {formatSTime}{" "}
+                  {"START"} &nbsp;
+                  <span className="green-time">
+                    {formatSDate} {" · "} {formatSTime}{" "}
+                  </span>
                 </span>
                 <span>
-                  {formatEDate}
-                  {" · "} {formatETime}
+                  {"END"} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span className="green-time">
+                    {formatEDate}
+                    {" · "} {formatETime}
+                  </span>
                 </span>
               </div>
             </div>

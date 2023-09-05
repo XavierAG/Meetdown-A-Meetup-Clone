@@ -41,7 +41,7 @@ function ListEvent() {
     }
   }, [events]);
 
-  if (Object.keys(events).length === 0) {
+  if (!events || Object.keys(events).length === 0) {
     return <div>Loading...</div>;
   }
 

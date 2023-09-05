@@ -1,0 +1,8 @@
+.profile-drop-down {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-drop-down li {
+    padding: 4px;
+}

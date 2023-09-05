@@ -47,13 +47,20 @@ function GroupInfo() {
   if (currentUser?.id === group?.organizerId) {
     groupButtons = (
       <div>
-        <button onClick={() => history.push(`/groups/${groupId}/events/new`)}>
+        <button
+          className="group-info-button"
+          onClick={() => history.push(`/groups/${groupId}/events/new`)}
+        >
           Create Event
         </button>
-        <button onClick={() => history.push(`/groups/${groupId}/update-group`)}>
+        <button
+          className="group-info-button"
+          onClick={() => history.push(`/groups/${groupId}/update-group`)}
+        >
           Update
         </button>
         <OpenModalButton
+          className="group-info-button"
           buttonText="Delete"
           modalComponent={
             <DeleteModal deleteContext={{ type: "Group", groupId: groupId }} />

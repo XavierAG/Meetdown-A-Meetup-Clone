@@ -39,3 +39,6 @@
   button:hover {
     background-color: #8e281b;
   }
+  button.sign-up[disabled] {
+    background-color: gray;
+  }

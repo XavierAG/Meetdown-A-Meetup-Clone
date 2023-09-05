@@ -1,0 +1,6 @@
+.delete-buttons .delete-cancel{
+    background-color: gray;
+}
+.delete-buttons button{
+    margin-right: 10px;
+}
