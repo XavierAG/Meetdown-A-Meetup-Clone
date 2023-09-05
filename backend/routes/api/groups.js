@@ -27,8 +27,8 @@ const validateSignup = [
     .withMessage("Name must be between 5 and 60 characters"),
   check("about")
     .exists({ checkFalsy: true })
-    .isLength({ min: 30, max: 255 })
-    .withMessage("About must be between 30 and 255 characters"),
+    .isLength({ min: 30, max: 500 })
+    .withMessage("About must be between 30 and 500 characters"),
   check("type")
     .exists({ checkFalsy: true })
     .isIn(["Online", "In person"])
@@ -75,8 +75,8 @@ const validateEventSignup = [
     .withMessage("Price is invalid"),
   check("description")
     .exists({ checkFalsy: true })
-    .isLength({ min: 30, max: 255 })
-    .withMessage("Description must be between 30 and 255 characters"),
+    .isLength({ min: 30, max: 500 })
+    .withMessage("Description must be between 30 and 500 characters"),
   check("startDate")
     .exists({ checkFalsy: true })
     .isAfter()
