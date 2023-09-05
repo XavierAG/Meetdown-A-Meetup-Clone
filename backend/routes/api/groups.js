@@ -71,8 +71,8 @@ const validateEventSignup = [
     .withMessage("Capacity must be an integer"),
   check("price")
     .exists({ checkFalsy: true })
-    .isFloat()
-    .withMessage("Price is invalid"),
+    .isInt({ min: 0 })
+    .withMessage("Price must be a whole number and not negative"),
   check("description")
     .exists({ checkFalsy: true })
     .isLength({ min: 30, max: 500 })

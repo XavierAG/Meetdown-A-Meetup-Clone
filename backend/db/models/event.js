@@ -61,13 +61,13 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       price: {
-        type: DataTypes.FLOAT, // Use FLOAT data type to allow decimals
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           isFloat: {
             msg: "Price must be a valid number",
           },
-          min: 0, // Minimum value of 0
+          min: 0,
         },
       },
       private: {

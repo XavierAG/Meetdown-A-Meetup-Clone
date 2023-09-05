@@ -172,7 +172,7 @@ function CreateEvent() {
         </div>
         <div className="event-section">
           <p className="p-create">
-            Please add in imaage url for your event below
+            Please add in image url for your event below
           </p>
           <input
             type="text"
