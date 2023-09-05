@@ -44,7 +44,7 @@ function EventInfo() {
     );
   }
   const sDate = new Date(event.startDate);
-  const eDate = new Date(event.startDate);
+  const eDate = new Date(event.endDate);
   const formatSDate = sDate.toISOString().split("T")[0];
   const formatSTime = sDate.toTimeString().split(" ")[0];
   const formatEDate = eDate.toISOString().split("T")[0];
